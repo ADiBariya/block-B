@@ -1,0 +1,12 @@
+node_modules/
+dist/
+artifacts/*
+!artifacts/screenshots/
+artifacts/screenshots/*
+!artifacts/screenshots/*.png
+test-results/
+playwright-report/
+*.local
+.env
+.env.*
+!.env.example

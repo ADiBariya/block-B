@@ -1,0 +1,33 @@
+project_id = "block-party"
+
+# Keep the local stack isolated from other Supabase projects that commonly use 5432x ports.
+[api]
+port = 55421
+
+[db]
+port = 55422
+shadow_port = 55420
+
+[studio]
+port = 55423
+
+[local_smtp]
+port = 55424
+
+[analytics]
+port = 55427
+
+[auth]
+enable_anonymous_sign_ins = true
+
+[functions.start-session]
+verify_jwt = true
+
+[functions.submit-score]
+verify_jwt = true
+
+[functions.leaderboard-page]
+verify_jwt = true
+
+[functions.change-username]
+verify_jwt = true
