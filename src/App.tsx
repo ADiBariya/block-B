@@ -1073,18 +1073,6 @@ export default function App() {
               <span className="mobile-home-hero-kicker">CLASSIC MODE</span>
               <h2>{status === 'over' ? 'Ready for another round?' : mobileCanContinue ? 'Continue your game.' : 'Make your next move.'}</h2>
               <p>{status === 'over' ? 'A fresh board is ready when you are.' : mobileCanContinue ? 'Your solo round is saved on this device.' : 'Place blocks, clear lines and build combos.'}</p>
-              <button className="mobile-home-online" aria-label="Play online" onClick={() => openDialog('online')}><Icon name="trophy" size={16} />Play Online <span>Sign in required</span></button>
-              <button
-                className="primary-button mobile-home-play"
-                onClick={() => { if (status === 'over') void restartGame(); else void startGame(); }}
-                disabled={startPending}
-                aria-label={startPending ? 'Connecting' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
-              >
-                <Icon name="play" size={16} />
-                {startPending ? 'Starting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Continue solo' : 'Play Solo'}
-                <Icon name="arrow" size={17} />
-              </button>
-              {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
             </div>
             <div className="mobile-home-art" aria-hidden="true">
               <span className="mobile-home-art-sparkle">✦</span>
@@ -1097,6 +1085,25 @@ export default function App() {
                 ))}
               </div>
             </div>
+          </section>
+
+          <section className="mobile-home-modes" aria-label="Game modes">
+            <button className="mobile-home-online" aria-label="Play online" onClick={() => openDialog('online')}>
+              <Icon name="trophy" size={19} />
+              <span className="mobile-mode-copy"><strong>Play Online</strong><small>Quick match · Ranked · Friends</small></span>
+              <Icon name="arrow" size={18} />
+            </button>
+            <button
+              className="primary-button mobile-home-play"
+              onClick={() => { if (status === 'over') void restartGame(); else void startGame(); }}
+              disabled={startPending}
+              aria-label={startPending ? 'Starting' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
+            >
+              <Icon name="play" size={18} />
+              <span>{startPending ? 'Starting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Continue solo' : 'Play Solo'}</span>
+              <Icon name="arrow" size={18} />
+            </button>
+            {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
           </section>
 
           <button className="mobile-home-daily" onClick={() => openDialog('daily')} aria-label="Daily challenge">
