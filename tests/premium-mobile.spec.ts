@@ -1,8 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
 
-async function enterOffline(page: Parameters<typeof test>[0] extends never ? never : any) {
+async function enterOffline(page: Page) {
   await page.getByRole('button', { name: 'Play solo offline' }).tap();
 }
 
