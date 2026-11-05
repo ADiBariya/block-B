@@ -52,7 +52,8 @@ test('mobile play enters immersive gameplay and the brand returns home', async (
   await expect(page.locator('.site-shell')).toHaveClass(/screen-game/);
   await expect(page.locator('.site-header')).toBeHidden();
   await expect(page.locator('.mobile-bottom-nav')).toBeHidden();
-  await page.getByRole('link', { name: 'Block Party home' }).tap();
+  await page.getByRole('button', { name: 'Pause game' }).tap();
+  await page.getByRole('button', { name: 'Back to home' }).tap();
   await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Continue solo' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Start a fresh game' })).toBeVisible();
