@@ -1096,7 +1096,7 @@ export default function App() {
                 {startPending ? 'Connecting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
                 <Icon name="arrow" size={17} />
               </button>
-              {game.moves > 0 && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
+              {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
             </div>
             <div className="mobile-home-art" aria-hidden="true">
               <span className="mobile-home-art-sparkle">✦</span>
