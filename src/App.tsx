@@ -15,7 +15,7 @@ import {
 import { gameAudio } from './game/audio';
 import { ParticleField } from './game/particles';
 
-type IconName = 'play' | 'pause' | 'restart' | 'sound' | 'muted' | 'trophy' | 'arrow' | 'close' | 'help' | 'rotate' | 'mouse' | 'sparkle' | 'check' | 'lock' | 'keyboard';
+type IconName = 'play' | 'pause' | 'restart' | 'sound' | 'muted' | 'trophy' | 'arrow' | 'close' | 'help' | 'rotate' | 'mouse' | 'sparkle' | 'check' | 'lock' | 'keyboard' | 'calendar' | 'user';
 type Status = 'ready' | 'playing' | 'paused' | 'over';
 type DialogKind = 'help' | 'scores' | 'global' | 'daily' | 'profile' | 'statistics' | 'collection' | 'shop' | 'settings' | null;
 type LocalStats = { gamesPlayed: number; totalScore: number; totalLines: number; bestCombo: number };
@@ -89,6 +89,8 @@ function Icon({ name, size = 20, className = '' }: { name: IconName; size?: numb
     sparkle: <path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z" />,
     check: <path d="m5 12 4 4L19 6" />,
     lock: <><rect x="5" y="10" width="14" height="11" rx="3" /><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" /></>,
+    calendar: <><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M7 3v4M17 3v4M3 10h18" /></>,
+    user: <><circle cx="12" cy="8" r="3.5" /><path d="M5 21c.5-4.1 2.8-6.2 7-6.2s6.5 2.1 7 6.2" /></>,
     keyboard: <><rect x="2" y="5" width="20" height="14" rx="3" /><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 15h8" /></>,
   };
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">{paths[name]}</svg>;
@@ -1061,7 +1063,72 @@ export default function App() {
         </nav>
       </header>
 
-      <main id="game" className="play-layout">
+      <main id="game" className={`play-layout ${status === 'ready' ? 'mobile-home-active' : ''}`}>
+        <section className="mobile-home-screen" aria-label="Block Party home">
+          <div className="mobile-home-heading">
+            <div>
+              <span className="mobile-home-eyebrow"><span />A LITTLE BREAK, WELL SPENT</span>
+              <h1>{savedGame && game.moves > 0 ? 'Welcome back.' : 'Ready for a little fun?'}</h1>
+              <p>{savedGame && game.moves > 0 ? 'Your next good move is waiting.' : 'Make a little space for something good.'}</p>
+            </div>
+            <button className="mobile-home-profile" onClick={() => openDialog('profile')} aria-label="Open profile">
+              <Icon name="user" size={21} />
+            </button>
+          </div>
+
+          <section className="mobile-home-hero" aria-label="Start playing">
+            <div className="mobile-home-hero-copy">
+              <span className="mobile-home-hero-kicker">YOUR HAPPY PLACE</span>
+              <h2>{savedGame && game.moves > 0 ? 'Pick up where you left off.' : 'Your next little win starts here.'}</h2>
+              <p>{savedGame && game.moves > 0 ? 'Your board is saved on this device.' : 'No timers. No pressure. Just one more round.'}</p>
+              <button
+                className="primary-button mobile-home-play"
+                onClick={startGame}
+                disabled={startPending}
+                aria-label={startPending ? 'Connecting' : savedGame && game.moves > 0 ? 'Keep playing' : "Let's play"}
+              >
+                <Icon name="play" size={16} />
+                {startPending ? 'Connecting…' : savedGame && game.moves > 0 ? 'Keep playing' : "Let's play"}
+                <Icon name="arrow" size={17} />
+              </button>
+              {savedGame && game.moves > 0 && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
+            </div>
+            <div className="mobile-home-art" aria-hidden="true">
+              <span className="mobile-home-art-sparkle">✦</span>
+              <div className="mobile-home-art-grid">
+                {Array.from({ length: 16 }, (_, index) => (
+                  <i
+                    key={index}
+                    className={`mobile-home-art-cell ${[1, 4, 5, 6, 9, 10, 13].includes(index) ? 'is-filled' : ''} ${[1, 6, 9].includes(index) ? 'is-lavender' : ''} ${[4, 13].includes(index) ? 'is-coral' : ''} ${[5, 10].includes(index) ? 'is-mint' : ''}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <button className="mobile-home-daily" onClick={() => openDialog('daily')} aria-label="Daily challenge">
+            <span className="mobile-home-daily-icon"><Icon name="calendar" size={21} /></span>
+            <span className="mobile-home-daily-copy">
+              <small>YOUR DAILY CHALLENGE</small>
+              <strong>A fresh little puzzle</strong>
+              <em>New day, new board · {new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</em>
+            </span>
+            <span className="mobile-home-daily-arrow"><Icon name="arrow" size={18} /></span>
+          </button>
+
+          <section className="mobile-home-progress" aria-label="Your progress">
+            <div className="mobile-home-section-heading">
+              <h2>Your progress</h2>
+              <button onClick={() => openDialog('profile')}>View profile <Icon name="arrow" size={13} /></button>
+            </div>
+            <div className="mobile-home-stats">
+              <div><strong>{(scores[0]?.score ?? 0).toLocaleString()}</strong><span>Personal best</span></div>
+              <div><strong>{localStats.gamesPlayed}</strong><span>Rounds played</span></div>
+              <div><strong>{localStats.bestCombo}×</strong><span>Best combo</span></div>
+            </div>
+          </section>
+        </section>
+
         <section className="intro" aria-label="Welcome to Block Party">
           <div className="eyebrow"><span />YOUR DAILY HAPPY PLACE</div>
           <h1>block<br className="desktop-break" /><span className="mobile-space"> </span>party<span className="title-period">.</span></h1>
@@ -1189,6 +1256,27 @@ export default function App() {
         </aside>
       </main>
 
+      <nav className="mobile-bottom-nav" aria-label="Primary navigation">
+        <button className="mobile-bottom-tab is-active" onClick={() => {
+          if (dialog) closeDialog();
+          if (status === 'ready') void startGame();
+          else if (status === 'over') void restartGame();
+          else if (status === 'paused') togglePause();
+          else focusBoard();
+        }} aria-current="page">
+          <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Play</span>
+        </button>
+        <button className="mobile-bottom-tab" onClick={() => openDialog('daily')} aria-label="Daily challenge">
+          <span className="mobile-bottom-icon"><Icon name="calendar" size={18} /></span><span>Daily</span>
+        </button>
+        <button className="mobile-bottom-tab" onClick={openGlobalLeaderboard} aria-label="Leaderboard">
+          <span className="mobile-bottom-icon"><Icon name="trophy" size={18} /></span><span>Leaderboard</span>
+        </button>
+        <button className="mobile-bottom-tab" onClick={() => openDialog('profile')} aria-label="Profile">
+          <span className="mobile-bottom-icon"><Icon name="user" size={18} /></span><span>Profile</span>
+        </button>
+      </nav>
+
       <nav className="feature-menu" aria-label="More Block Party screens">
         <button onClick={() => openDialog('daily')}><span>✦</span>Daily challenge</button>
         <button onClick={openGlobalLeaderboard}><span>♧</span>Global board</button>
@@ -1223,6 +1311,12 @@ export default function App() {
             <div className="feature-stat-grid"><div><strong>{(scores[0]?.score ?? 0).toLocaleString()}</strong><span>Personal best</span></div><div><strong>{localStats.gamesPlayed}</strong><span>Games played</span></div><div><strong>{localStats.totalLines}</strong><span>Lines cleared</span></div><div><strong>{localStats.bestCombo}×</strong><span>Best combo</span></div></div>
             <button className="secondary-feature-button" onClick={() => openGlobalLeaderboard()}>Global leaderboard and username <Icon name="arrow" size={16} /></button>
           </>}
+          <div className="profile-shortcuts" aria-label="More profile options">
+            <button onClick={() => setDialog('statistics')}><Icon name="trophy" size={16} />Statistics</button>
+            <button onClick={() => setDialog('collection')}><Icon name="sparkle" size={16} />Collection</button>
+            <button onClick={() => setDialog('shop')}><Icon name="lock" size={16} />Shop</button>
+            <button onClick={() => setDialog('settings')}><Icon name="keyboard" size={16} />Settings</button>
+          </div>
           {dialog === 'statistics' && <>
             <div className="dialog-eyebrow"><Icon name="trophy" size={16} />YOUR LITTLE MILESTONES</div>
             <h2 id="dialog-title">The good stuff, counted.</h2>
