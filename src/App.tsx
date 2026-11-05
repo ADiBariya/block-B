@@ -517,7 +517,7 @@ export default function App() {
     if (startPending) return;
     setStartPending(true);
     let startState = gameRef.current;
-    if (startState.moves === 0) {
+    if (startState.moves === 0 && statusRef.current === 'ready') {
       startState = await prepareNewGame();
       gameRef.current = startState;
       setGame(startState);
@@ -1042,6 +1042,7 @@ export default function App() {
   }
 
   const best = Math.max(scores[0]?.score ?? 0, game.score);
+  const mobileCanContinue = status === 'playing' || status === 'paused' || game.moves > 0;
   const showStarterHint = game.moves === 0 && selected === 0 && !!activePiece && pieceSize(activePiece).rows === 1;
 
   return (
@@ -1072,7 +1073,7 @@ export default function App() {
           <div className="mobile-home-heading">
             <div>
               <span className="mobile-home-eyebrow"><span />A LITTLE BREAK, WELL SPENT</span>
-              <h1>{status === 'over' ? 'Ready for another round?' : game.moves > 0 ? 'Welcome back.' : 'Ready for a little fun?'}</h1>
+              <h1>{status === 'over' ? 'Ready for another round?' : mobileCanContinue ? 'Welcome back.' : 'Ready for a little fun?'}</h1>
               <p>{game.moves > 0 ? 'Your next good move is waiting.' : 'Make a little space for something good.'}</p>
             </div>
             <button className="mobile-home-profile" onClick={() => openDialog('profile')} aria-label="Open profile">
@@ -1083,16 +1084,16 @@ export default function App() {
           <section className="mobile-home-hero" aria-label="Start playing">
             <div className="mobile-home-hero-copy">
               <span className="mobile-home-hero-kicker">YOUR HAPPY PLACE</span>
-              <h2>{status === 'over' ? 'Your next little win starts here.' : game.moves > 0 ? 'Pick up where you left off.' : 'Your next little win starts here.'}</h2>
-              <p>{status === 'over' ? 'That was a good round. Ready for another?' : game.moves > 0 ? 'Your board is saved on this device.' : 'No timers. No pressure. Just one more round.'}</p>
+              <h2>{status === 'over' ? 'Your next little win starts here.' : mobileCanContinue ? 'Pick up where you left off.' : 'Your next little win starts here.'}</h2>
+              <p>{status === 'over' ? 'That was a good round. Ready for another?' : mobileCanContinue ? 'Your round is saved on this device.' : 'No timers. No pressure. Just one more round.'}</p>
               <button
                 className="primary-button mobile-home-play"
                 onClick={() => { if (status === 'over') void restartGame(); else void startGame(); }}
                 disabled={startPending}
-                aria-label={startPending ? 'Connecting' : status === 'over' ? 'Play another round' : game.moves > 0 ? 'Keep playing' : "Let's play"}
+                aria-label={startPending ? 'Connecting' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
               >
                 <Icon name="play" size={16} />
-                {startPending ? 'Connecting…' : status === 'over' ? 'Play another round' : game.moves > 0 ? 'Keep playing' : "Let's play"}
+                {startPending ? 'Connecting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
                 <Icon name="arrow" size={17} />
               </button>
               {game.moves > 0 && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
