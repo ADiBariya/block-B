@@ -190,6 +190,7 @@ export default function App() {
   const [localStats, setLocalStats] = useState<LocalStats>(() => readStored(STATS_KEY, { gamesPlayed: 0, totalScore: 0, totalLines: 0, bestCombo: 0 }));
   const [cosmetics, setCosmetics] = useState<CosmeticChoice>(() => readStored(COSMETICS_KEY, { theme: 'cream', skin: 'classic' }));
   const [dialog, setDialog] = useState<DialogKind>(null);
+  const [mobileScreen, setMobileScreen] = useState<'home' | 'game'>('home');
   const [selected, setSelected] = useState<number | null>(0);
   const [cursor, setCursor] = useState<Point | null>(null);
   const [inputMode, setInputMode] = useState<InputMode>('pointer');
@@ -368,6 +369,7 @@ export default function App() {
   }
 
   function startDailyChallenge() {
+    setMobileScreen('game');
     const day = localDateKey();
     const fresh = newSeededGame(dailySeed(), `daily-${day}`);
     rankedSession.current = null;
@@ -511,6 +513,7 @@ export default function App() {
   }
 
   async function startGame() {
+    setMobileScreen('game');
     if (startPending) return;
     setStartPending(true);
     let startState = gameRef.current;
@@ -549,6 +552,7 @@ export default function App() {
   }
 
   async function restartGame() {
+    setMobileScreen('game');
     if (startPending) return;
     recordRun(gameRef.current);
     Object.values(timers.current).forEach(clearTimeout);
@@ -1043,7 +1047,7 @@ export default function App() {
   return (
     <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin}`}>
       <header className="site-header">
-        <a className="brand" href="#game" aria-label="Block Party home" onClick={(event) => { event.preventDefault(); closeDialog(); document.getElementById('game')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }}>
+        <a className="brand" href="#game" aria-label="Block Party home" onClick={(event) => { event.preventDefault(); closeDialog(); setMobileScreen('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
           <BrandMark /><span>blockparty<span className="brand-period">.</span></span>
         </a>
         <nav className="header-nav" aria-label="Main navigation">
@@ -1063,13 +1067,13 @@ export default function App() {
         </nav>
       </header>
 
-      <main id="game" className={`play-layout ${status === 'ready' ? 'mobile-home-active' : ''}`}>
+      <main id="game" className={`play-layout ${mobileScreen === 'home' ? 'mobile-hub-active' : ''}`}>
         <section className="mobile-home-screen" aria-label="Block Party home">
           <div className="mobile-home-heading">
             <div>
               <span className="mobile-home-eyebrow"><span />A LITTLE BREAK, WELL SPENT</span>
-              <h1>{savedGame && game.moves > 0 ? 'Welcome back.' : 'Ready for a little fun?'}</h1>
-              <p>{savedGame && game.moves > 0 ? 'Your next good move is waiting.' : 'Make a little space for something good.'}</p>
+              <h1>{game.moves > 0 ? 'Welcome back.' : 'Ready for a little fun?'}</h1>
+              <p>{game.moves > 0 ? 'Your next good move is waiting.' : 'Make a little space for something good.'}</p>
             </div>
             <button className="mobile-home-profile" onClick={() => openDialog('profile')} aria-label="Open profile">
               <Icon name="user" size={21} />
@@ -1079,19 +1083,19 @@ export default function App() {
           <section className="mobile-home-hero" aria-label="Start playing">
             <div className="mobile-home-hero-copy">
               <span className="mobile-home-hero-kicker">YOUR HAPPY PLACE</span>
-              <h2>{savedGame && game.moves > 0 ? 'Pick up where you left off.' : 'Your next little win starts here.'}</h2>
-              <p>{savedGame && game.moves > 0 ? 'Your board is saved on this device.' : 'No timers. No pressure. Just one more round.'}</p>
+              <h2>{game.moves > 0 ? 'Pick up where you left off.' : 'Your next little win starts here.'}</h2>
+              <p>{game.moves > 0 ? 'Your board is saved on this device.' : 'No timers. No pressure. Just one more round.'}</p>
               <button
                 className="primary-button mobile-home-play"
                 onClick={startGame}
                 disabled={startPending}
-                aria-label={startPending ? 'Connecting' : savedGame && game.moves > 0 ? 'Keep playing' : "Let's play"}
+                aria-label={startPending ? 'Connecting' : game.moves > 0 ? 'Keep playing' : "Let's play"}
               >
                 <Icon name="play" size={16} />
-                {startPending ? 'Connecting…' : savedGame && game.moves > 0 ? 'Keep playing' : "Let's play"}
+                {startPending ? 'Connecting…' : game.moves > 0 ? 'Keep playing' : "Let's play"}
                 <Icon name="arrow" size={17} />
               </button>
-              {savedGame && game.moves > 0 && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
+              {game.moves > 0 && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
             </div>
             <div className="mobile-home-art" aria-hidden="true">
               <span className="mobile-home-art-sparkle">✦</span>
@@ -1259,11 +1263,12 @@ export default function App() {
       <nav className="mobile-bottom-nav" aria-label="Primary navigation">
         <button className="mobile-bottom-tab is-active" onClick={() => {
           if (dialog) closeDialog();
+          setMobileScreen('game');
           if (status === 'ready') void startGame();
           else if (status === 'over') void restartGame();
           else if (status === 'paused') togglePause();
           else focusBoard();
-        }} aria-current="page">
+        }} aria-current={mobileScreen === 'game' ? 'page' : undefined}>
           <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Play</span>
         </button>
         <button className="mobile-bottom-tab" onClick={() => openDialog('daily')} aria-label="Daily challenge">
