@@ -1271,7 +1271,7 @@ export default function App() {
         }} aria-current={mobileScreen === 'game' ? 'page' : undefined}>
           <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Play</span>
         </button>
-        <button className="mobile-bottom-tab" onClick={() => openDialog('daily')} aria-label="Daily challenge">
+        <button className="mobile-bottom-tab" onClick={() => openDialog('daily')}>
           <span className="mobile-bottom-icon"><Icon name="calendar" size={18} /></span><span>Daily</span>
         </button>
         <button className="mobile-bottom-tab" onClick={openGlobalLeaderboard} aria-label="Leaderboard">
