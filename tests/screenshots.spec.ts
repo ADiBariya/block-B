@@ -2,7 +2,7 @@ import { mkdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
-test('capture the local-first app screens for visual review', async ({ page }) => {
+test('capture the premium mobile home and player screens for visual review', async ({ page }) => {
   const capture = async (name: string) => {
     const file = resolve('artifacts', 'screenshots', name);
     await mkdir(dirname(file), { recursive: true });
@@ -11,23 +11,41 @@ test('capture the local-first app screens for visual review', async ({ page }) =
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
-  await page.waitForTimeout(900);
+  await expect(page.getByRole('heading', { name: 'Ready for a little fun?' })).toBeVisible();
+  await page.waitForTimeout(350);
   await capture('home-gameplay.png');
-  const screens = [
-    ['Daily challenge', 'A fresh little puzzle.', 'daily-challenge.png'],
-    ['Profile', 'A little about you.', 'profile.png'],
+
+  await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' }).click();
+  await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
+  await page.waitForTimeout(180);
+  await capture('daily-challenge.png');
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+
+  await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' }).click();
+  await expect(page.getByRole('heading', { name: 'A little about you.' })).toBeVisible();
+  await page.waitForTimeout(180);
+  await capture('profile.png');
+
+  const profileScreens = [
     ['Statistics', 'The good stuff, counted.', 'statistics.png'],
     ['Collection', 'A small collection.', 'collection.png'],
     ['Shop', 'A shop, someday.', 'shop-disabled.png'],
     ['Settings', 'Settings.', 'settings.png'],
-    ['Global', 'The global leaderboard.', 'global-offline.png'],
   ] as const;
-
-  for (const [button, heading, file] of screens) {
-    await page.getByRole('button', { name: button }).first().click();
+  for (const [button, heading, file] of profileScreens) {
+    await page.locator('.profile-shortcuts').getByRole('button', { name: button }).click();
     await expect(page.getByRole('heading', { name: heading })).toBeVisible();
-    await page.waitForTimeout(280);
+    await page.waitForTimeout(180);
     await capture(file);
     await page.getByRole('button', { name: 'Close dialog' }).click();
+    if (button !== 'Settings') {
+      await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' }).click();
+      await expect(page.getByRole('heading', { name: 'A little about you.' })).toBeVisible();
+    }
   }
+
+  await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Leaderboard' }).click();
+  await expect(page.getByRole('heading', { name: 'The global leaderboard.' })).toBeVisible();
+  await page.waitForTimeout(180);
+  await capture('global-offline.png');
 });

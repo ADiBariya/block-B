@@ -135,6 +135,7 @@ test('game over saves a high score, restart is instant, and scores can be cleare
 
 test('layouts fit phones, tablets and desktop without horizontal scrolling', async ({ page }) => {
   await page.goto('/');
+  await page.getByRole('button', { name: "Let's play" }).click();
   for (const width of [320, 390, 600, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     const dimensions = await page.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
