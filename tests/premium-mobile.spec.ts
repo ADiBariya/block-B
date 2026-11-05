@@ -37,7 +37,7 @@ test('daily challenge can be opened from the bottom navigation and starts gamepl
 
 test('profile contains secondary player destinations without crowding the bottom navigation', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Profile' }).tap();
+  await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' }).tap();
   await expect(page.getByRole('heading', { name: 'A little about you.' })).toBeVisible();
   const shortcuts = page.locator('.profile-shortcuts');
   await expect(shortcuts.getByRole('button', { name: 'Statistics' })).toBeVisible();
