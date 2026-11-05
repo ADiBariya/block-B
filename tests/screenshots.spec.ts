@@ -24,7 +24,8 @@ test('capture the new auth, home, gameplay and profile screens for visual review
   await expect(page.locator('.board-grid')).toBeVisible();
   await page.waitForTimeout(180);
   await capture('gameplay-fullscreen.png');
-  await page.getByRole('link', { name: 'Block Party home' }).click();
+  await page.getByRole('button', { name: 'Pause game' }).click();
+  await page.getByRole('button', { name: 'Back to home' }).click();
 
   await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' }).click();
   await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
