@@ -1353,3 +1353,5 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 500; min-width: 16px; h
   .mobile-home-modes .mobile-home-online { min-height: 55px; }
   .mobile-home-modes .mobile-home-play { min-height: 53px; }
 }
+
+.auth-provider-glyph { width: 21px; height: 21px; display: grid; place-items: center; border-radius: 50%; background: #eee7f6; color: #8161c9; font-size: 13px; font-weight: 850; }
