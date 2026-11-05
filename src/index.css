@@ -682,8 +682,8 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 500; min-width: 16px; h
 
 /* Premium mobile experience */
 .mobile-home-screen,
-.mobile-bottom-nav,
-.profile-shortcuts { display: none; }
+.mobile-bottom-nav { display: none; }
+.profile-shortcuts { display: grid; }
 
 .profile-shortcuts {
   grid-template-columns: repeat(2, minmax(0, 1fr));
