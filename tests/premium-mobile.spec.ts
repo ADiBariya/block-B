@@ -10,7 +10,7 @@ test('mobile home is the first screen and primary navigation stays available', a
   await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Leaderboard' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Profile' })).toBeVisible();
+  await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' })).toBeVisible();
 });
 
 test('mobile play enters gameplay and the brand returns to the home hub', async ({ page }) => {
