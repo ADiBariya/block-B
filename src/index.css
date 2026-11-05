@@ -1321,3 +1321,35 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 500; min-width: 16px; h
 .online-mode-list button:nth-child(3) .online-mode-icon { background: #d8c7eb; color: #7756a2; }
 .online-availability-note { display: flex; align-items: flex-start; gap: 7px; margin-top: 14px; color: #9b8da5; font-size: 9px; line-height: 1.5; }
 .online-availability-note svg { margin-top: 1px; }
+
+
+/* Full-width game mode actions, following the approved home blueprint */
+.mobile-home-modes { display: grid; gap: 10px; width: 100%; }
+.mobile-home-modes .mobile-home-online {
+  min-height: 58px;
+  margin: 0;
+  justify-content: flex-start;
+  padding: 0 16px;
+  border-radius: 15px;
+}
+.mobile-home-modes .mobile-mode-copy { min-width: 0; flex: 1; display: grid; gap: 4px; text-align: left; }
+.mobile-home-modes .mobile-mode-copy strong { font-size: 13px; font-weight: 850; }
+.mobile-home-modes .mobile-mode-copy small { color: #f1e8fc; font-size: 9px; font-weight: 550; }
+.mobile-home-modes .mobile-home-play {
+  width: 100%;
+  min-height: 56px;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 0 16px;
+  border-radius: 15px;
+  font-size: 12px;
+}
+.mobile-home-modes .mobile-home-play > span { flex: 1; text-align: left; }
+.mobile-home-modes .mobile-home-fresh { justify-self: center; margin: 0; }
+@media (max-width: 380px) {
+  .mobile-home-modes .mobile-home-online { min-height: 55px; }
+  .mobile-home-modes .mobile-home-play { min-height: 53px; }
+}
