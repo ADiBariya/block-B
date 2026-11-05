@@ -30,10 +30,15 @@ test('sign-in form reports that authentication is not connected yet', async ({ p
   await expect(page.locator('.auth-message')).toContainText('No session was created');
 });
 
-test('online mode returns to account entry instead of creating a guest match', async ({ page }) => {
+test('online mode options require a real account before entering matchmaking', async ({ page }) => {
   await page.goto('/');
   await enterOffline(page);
   await page.getByRole('button', { name: 'Play online' }).tap();
+  await expect(page.getByRole('heading', { name: 'Play online.' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Quick Match/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Ranked Match/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Private Room/ })).toBeVisible();
+  await page.getByRole('button', { name: /Quick Match/ }).tap();
   await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
   await expect(page.locator('.auth-notice')).toContainText('Sign in or create an account');
 });
