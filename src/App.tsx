@@ -15,6 +15,7 @@ import {
 import { gameAudio } from './game/audio';
 import { ParticleField } from './game/particles';
 import AuthScreen from './components/AuthScreen';
+import OnboardingScreen from './components/OnboardingScreen';
 
 type IconName = 'play' | 'pause' | 'restart' | 'sound' | 'muted' | 'trophy' | 'arrow' | 'close' | 'help' | 'rotate' | 'mouse' | 'sparkle' | 'check' | 'lock' | 'keyboard' | 'calendar' | 'user';
 type Status = 'ready' | 'playing' | 'paused' | 'over';
@@ -191,9 +192,11 @@ export default function App() {
   const [localStats, setLocalStats] = useState<LocalStats>(() => readStored(STATS_KEY, { gamesPlayed: 0, totalScore: 0, totalLines: 0, bestCombo: 0 }));
   const [cosmetics, setCosmetics] = useState<CosmeticChoice>(() => readStored(COSMETICS_KEY, { theme: 'cream', skin: 'classic' }));
   const [dialog, setDialog] = useState<DialogKind>(null);
-  const [mobileScreen, setMobileScreen] = useState<'auth' | 'home' | 'game'>(() => {
+  const [mobileScreen, setMobileScreen] = useState<'auth' | 'onboarding' | 'home' | 'game'>(() => {
     try {
-      return window.matchMedia('(max-width: 740px)').matches && localStorage.getItem('blockparty.entry.v1') !== 'offline' ? 'auth' : 'home';
+      if (!window.matchMedia('(max-width: 740px)').matches) return 'home';
+      if (localStorage.getItem('blockparty.entry.v1') !== 'offline') return 'auth';
+      return localStorage.getItem('blockparty.onboarding.v1') === 'complete' ? 'home' : 'onboarding';
     } catch { return 'home'; }
   });
   const [authNotice, setAuthNotice] = useState('');
@@ -655,6 +658,13 @@ export default function App() {
   function enterOfflinePlay() {
     try { localStorage.setItem('blockparty.entry.v1', 'offline'); } catch { /* Offline play remains available for this session. */ }
     setAuthNotice('');
+    try {
+      setMobileScreen(localStorage.getItem('blockparty.onboarding.v1') === 'complete' ? 'home' : 'onboarding');
+    } catch { setMobileScreen('home'); }
+  }
+
+  function finishOnboarding() {
+    try { localStorage.setItem('blockparty.onboarding.v1', 'complete'); } catch { /* The tutorial can still be skipped for this session. */ }
     setMobileScreen('home');
   }
 
@@ -1032,8 +1042,9 @@ export default function App() {
   const showStarterHint = game.moves === 0 && selected === 0 && !!activePiece && pieceSize(activePiece).rows === 1;
 
   return (
-    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin} ${mobileScreen === 'auth' ? 'screen-auth' : ''} ${mobileScreen === 'game' ? 'screen-game' : ''}`}>
+    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin} ${mobileScreen === 'auth' ? 'screen-auth' : ''} ${mobileScreen === 'onboarding' ? 'screen-onboarding' : ''} ${mobileScreen === 'game' ? 'screen-game' : ''}`}>
       <AuthScreen notice={authNotice} onPlayOffline={enterOfflinePlay} />
+      <OnboardingScreen onSkip={finishOnboarding} onComplete={finishOnboarding} />
       <header className="site-header">
         <a className="brand" href="#game" aria-label="Block Party home" onClick={(event) => { event.preventDefault(); closeDialog(); if (statusRef.current === 'playing') changeStatus('paused'); setMobileScreen('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
           <BrandMark /><span>blockparty<span className="brand-period">.</span></span>
