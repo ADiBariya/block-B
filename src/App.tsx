@@ -4,7 +4,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { ensureAnonymousIdentity, supabaseConfigured } from './services/supabase';
-import { loadGlobalPage, renameGlobalPlayer, searchGlobalPlayers, startRankedSession, submitRankedScore, subscribeToGlobalScores } from './services/leaderboardApi';
+import { loadGlobalPage, renameGlobalPlayer, searchGlobalPlayers, submitRankedScore, subscribeToGlobalScores } from './services/leaderboardApi';
 import { appendUniqueEntries, EventDeduper, nextCursor, validateUsername, type RankEntry, type ScoreNotice } from './game/leaderboard';
 import { MAX_REPLAY_ACTIONS, replayGame, type ReplayAction } from './game/competitive';
 import {
