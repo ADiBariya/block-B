@@ -16,6 +16,14 @@ test('capture the new auth, home, gameplay and profile screens for visual review
   await capture('auth-entry.png');
 
   await page.getByRole('button', { name: 'Play solo offline' }).click();
+  await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
+  await page.waitForTimeout(160);
+  await capture('onboarding-place-blocks.png');
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByRole('heading', { name: 'Clear Lines' })).toBeVisible();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByRole('heading', { name: 'Build Combos' })).toBeVisible();
+  await page.getByRole('button', { name: 'Let’s play' }).click();
   await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
   await page.waitForTimeout(350);
   await capture('home-hub.png');
