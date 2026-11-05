@@ -209,7 +209,7 @@ export default function App() {
   const [isRecord, setIsRecord] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
   const [liveMessage, setLiveMessage] = useState('Welcome to Block Party. Press Enter to play.');
-  const [identityState, setIdentityState] = useState<'unconfigured' | 'loading' | 'ready' | 'offline'>(supabaseConfigured ? 'loading' : 'unconfigured');
+  const [identityState, setIdentityState] = useState<'unconfigured' | 'loading' | 'ready' | 'offline'>('unconfigured');
   const [identityError, setIdentityError] = useState('');
   const [rankedNotice, setRankedNotice] = useState('');
   const [startPending, setStartPending] = useState(false);
@@ -1191,6 +1191,7 @@ export default function App() {
                 <h2>Take your time.</h2><p>Your blocks aren't going anywhere.</p>
                 <button className="primary-button" onClick={togglePause}><Icon name="play" size={17} />Keep the good going</button>
                 <button className="overlay-text-button" onClick={restartGame}><Icon name="restart" size={14} />Start fresh instead</button>
+                <button className="overlay-text-button" onClick={() => setMobileScreen('home')}>Back to home <Icon name="arrow" size={14} /></button>
               </div>}
 
               {status === 'over' && <div className="board-overlay gameover-screen">
@@ -1294,10 +1295,11 @@ export default function App() {
           {dialog === 'profile' && <>
             <div className="dialog-eyebrow"><Icon name="sparkle" size={16} />YOUR PLAYER CARD</div>
             <h2 id="dialog-title">A little about you.</h2>
-            <p className="dialog-intro">Your local profile stays on this device. Global guest identity is separate and only appears when the leaderboard backend is configured.</p>
+            <p className="dialog-intro">Your solo progress is saved on this device. Sign in when online accounts are connected to sync your player identity and compete.</p>
             <div className="profile-card"><BrandMark /><div><strong>{identityState === 'ready' && globalUsername ? globalUsername : 'Block Party player'}</strong><span>{identityState === 'ready' ? 'Guest profile connected' : 'Local player profile'}</span></div><span className="profile-badge">{identityState === 'ready' ? 'GUEST' : 'LOCAL'}</span></div>
             <div className="feature-stat-grid"><div><strong>{(scores[0]?.score ?? 0).toLocaleString()}</strong><span>Personal best</span></div><div><strong>{localStats.gamesPlayed}</strong><span>Games played</span></div><div><strong>{localStats.totalLines}</strong><span>Lines cleared</span></div><div><strong>{localStats.bestCombo}×</strong><span>Best combo</span></div></div>
-            <button className="secondary-feature-button" onClick={() => openGlobalLeaderboard()}>Global leaderboard and username <Icon name="arrow" size={16} /></button>
+            <button className="secondary-feature-button" onClick={requestOnlineAccess}>Account &amp; Security <Icon name="arrow" size={16} /></button>
+            <button className="secondary-feature-button" onClick={openGlobalLeaderboard}>Global leaderboard <Icon name="arrow" size={16} /></button>
           </>}
           {dialog === 'profile' && <div className="profile-shortcuts" aria-label="More profile options">
             <button onClick={() => setDialog('statistics')}><Icon name="trophy" size={16} />Statistics</button>
@@ -1338,7 +1340,7 @@ export default function App() {
               <label><span><strong>Haptics</strong><small>Gentle feedback after moves</small></span><input type="checkbox" checked={hapticsEnabled} onChange={(event) => setHapticsEnabled(event.target.checked)} /></label>
               <label><span><strong>Motion effects</strong><small>Celebrations and animated transitions</small></span><input type="checkbox" checked={motionEnabled} onChange={(event) => setMotionEnabled(event.target.checked)} /></label>
             </div>
-            <div className="settings-info"><strong>Privacy</strong><p>Local scores and preferences stay on this device. If the global leaderboard is configured, only replay-verified ranked results and your guest profile are sent to Supabase.</p></div>
+            <div className="settings-info"><strong>Privacy</strong><p>Solo scores and preferences stay on this device. Online accounts, cloud saves, matchmaking and ranked score uploads will be enabled after the Supabase Auth and backend integration.</p></div>
             <div className="settings-info"><strong>Support</strong><p>Support contact is not configured yet. App version 1.0.0 · Block Party.</p></div>
           </>}
           {dialog === 'help' && <>
