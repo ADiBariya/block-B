@@ -271,16 +271,19 @@ export default function App() {
 
   useEffect(() => {
     if (canvasRef.current) particles.current = new ParticleField(canvasRef.current);
-    if (Capacitor.isNativePlatform()) {
-      void StatusBar.setStyle({ style: Style.Light });
-      void StatusBar.setBackgroundColor({ color: '#f8f7f4' });
-    }
     return () => {
       particles.current?.destroy();
       Object.values(timers.current).forEach(clearTimeout);
       cancelAnimationFrame(dragFrame.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    const isGame = mobileScreen === 'game';
+    void StatusBar.setStyle({ style: isGame ? Style.Light : Style.Dark });
+    void StatusBar.setBackgroundColor({ color: isGame ? '#241a35' : mobileScreen === 'auth' ? '#eee5f8' : '#f8f7f4' });
+  }, [mobileScreen]);
 
   // No automatic anonymous account is created here. Online play will require a real account after Supabase Auth is connected.
 
@@ -1070,6 +1073,7 @@ export default function App() {
               <span className="mobile-home-hero-kicker">CLASSIC MODE</span>
               <h2>{status === 'over' ? 'Ready for another round?' : mobileCanContinue ? 'Continue your game.' : 'Make your next move.'}</h2>
               <p>{status === 'over' ? 'A fresh board is ready when you are.' : mobileCanContinue ? 'Your solo round is saved on this device.' : 'Place blocks, clear lines and build combos.'}</p>
+              <button className="mobile-home-online" aria-label="Play online" onClick={() => openDialog('online')}><Icon name="trophy" size={16} />Play Online <span>Sign in required</span></button>
               <button
                 className="primary-button mobile-home-play"
                 onClick={() => { if (status === 'over') void restartGame(); else void startGame(); }}
@@ -1077,10 +1081,9 @@ export default function App() {
                 aria-label={startPending ? 'Connecting' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
               >
                 <Icon name="play" size={16} />
-                {startPending ? 'Starting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Continue solo' : 'Play solo'}
+                {startPending ? 'Starting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Continue solo' : 'Play Solo'}
                 <Icon name="arrow" size={17} />
               </button>
-              <button className="mobile-home-online" onClick={() => openDialog('online')}><Icon name="trophy" size={16} />Play online <span>Sign in required</span></button>
               {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
             </div>
             <div className="mobile-home-art" aria-hidden="true">
