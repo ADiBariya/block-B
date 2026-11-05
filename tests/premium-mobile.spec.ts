@@ -32,7 +32,7 @@ test('mobile starts with account entry and offers honest offline play', async ({
 test('sign-in form reports that authentication is not connected yet', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Email address').fill('player@example.com');
-  await page.getByLabel('Password').fill('valid-password-123');
+  await page.locator('#auth-password').fill('valid-password-123');
   await page.locator('.auth-form').getByRole('button', { name: 'Sign in' }).click();
   await expect(page.locator('.auth-message')).toContainText('No session was created');
 });
