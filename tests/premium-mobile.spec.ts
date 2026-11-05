@@ -55,7 +55,7 @@ test('mobile play enters immersive gameplay and the brand returns home', async (
   await page.getByRole('button', { name: 'Pause game' }).tap();
   await page.getByRole('button', { name: 'Back to home' }).tap();
   await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Continue solo' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Keep playing' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Start a fresh game' })).toBeVisible();
 });
 
