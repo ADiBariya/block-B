@@ -8,7 +8,7 @@ test('mobile home is the first screen and primary navigation stays available', a
   await expect(page.getByRole('heading', { name: 'Ready for a little fun?' })).toBeVisible();
   await expect(page.getByRole('button', { name: "Let's play" })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Daily challenge' })).toBeVisible();
+  await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Leaderboard' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Profile' })).toBeVisible();
 });
@@ -27,7 +27,7 @@ test('mobile play enters gameplay and the brand returns to the home hub', async 
 
 test('daily challenge can be opened from the bottom navigation and starts gameplay', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Daily challenge' }).tap();
+  await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' }).tap();
   await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
   await page.getByRole('button', { name: 'Play today’s challenge' }).tap();
   await expect(page.locator('.mobile-home-screen')).toBeHidden();
