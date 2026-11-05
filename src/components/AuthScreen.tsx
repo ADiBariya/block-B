@@ -115,13 +115,13 @@ export default function AuthScreen({ notice, onPlayOffline }: AuthScreenProps) {
               <input autoComplete="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" required />
             </label>
             {mode !== 'reset' && (
-              <label>
-                <span>Password</span>
+              <div className="auth-field">
+                <label htmlFor="auth-password">Password</label>
                 <span className="auth-password-wrap">
-                  <input autoComplete={mode === 'create' ? 'new-password' : 'current-password'} type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 8 characters" minLength={8} required />
+                  <input id="auth-password" autoComplete={mode === 'create' ? 'new-password' : 'current-password'} type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 8 characters" minLength={8} required />
                   <button type="button" className="auth-password-toggle" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? 'Hide' : 'Show'}</button>
                 </span>
-              </label>
+              </div>
             )}
             {mode === 'create' && (
               <label>
