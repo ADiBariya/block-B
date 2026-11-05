@@ -18,7 +18,7 @@ import AuthScreen from './components/AuthScreen';
 
 type IconName = 'play' | 'pause' | 'restart' | 'sound' | 'muted' | 'trophy' | 'arrow' | 'close' | 'help' | 'rotate' | 'mouse' | 'sparkle' | 'check' | 'lock' | 'keyboard' | 'calendar' | 'user';
 type Status = 'ready' | 'playing' | 'paused' | 'over';
-type DialogKind = 'help' | 'scores' | 'global' | 'daily' | 'profile' | 'statistics' | 'collection' | 'shop' | 'settings' | null;
+type DialogKind = 'help' | 'scores' | 'global' | 'daily' | 'online' | 'profile' | 'statistics' | 'collection' | 'shop' | 'settings' | null;
 type LocalStats = { gamesPlayed: number; totalScore: number; totalLines: number; bestCombo: number };
 type CosmeticChoice = { theme: 'cream' | 'lavender' | 'mint'; skin: 'classic' | 'gloss' | 'outline' };
 const STATS_KEY = 'blockparty.stats.v1';
@@ -1080,7 +1080,7 @@ export default function App() {
                 {startPending ? 'Starting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Continue solo' : 'Play solo'}
                 <Icon name="arrow" size={17} />
               </button>
-              <button className="mobile-home-online" onClick={requestOnlineAccess}><Icon name="trophy" size={16} />Play online <span>Sign in required</span></button>
+              <button className="mobile-home-online" onClick={() => openDialog('online')}><Icon name="trophy" size={16} />Play online <span>Sign in required</span></button>
               {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
             </div>
             <div className="mobile-home-art" aria-hidden="true">
@@ -1202,6 +1202,7 @@ export default function App() {
                 <p>{game.lines} {game.lines === 1 ? 'line' : 'lines'} cleared{game.bestCombo > 1 ? ` / ${game.bestCombo}x best combo` : ''}</p>
                 <button className="primary-button" onClick={restartGame}><Icon name="restart" size={17} />One more round<Icon name="arrow" size={18} /></button>
                 <button className="overlay-text-button" onClick={() => openDialog('scores')}>See your best runs<Icon name="arrow" size={14} /></button>
+                <button className="overlay-text-button" onClick={() => setMobileScreen('home')}>Back to home <Icon name="arrow" size={14} /></button>
               </div>}
             </div>
 
@@ -1291,6 +1292,17 @@ export default function App() {
             <p className="dialog-intro">Today’s tray sequence is seeded from your local date. Play offline anytime; this score stays on this device and is not sent to global rankings.</p>
             <div className="feature-stat-grid"><div><strong>{new Date().toLocaleDateString(undefined, { weekday: 'long' })}</strong><span>Today’s date</span></div><div><strong>Same seed all day</strong><span>One shared local challenge</span></div></div>
             <button className="primary-button dialog-primary" onClick={startDailyChallenge}><Icon name="play" size={17} />Play today’s challenge<Icon name="arrow" size={18} /></button>
+          </>}
+          {dialog === 'online' && <>
+            <div className="dialog-eyebrow"><Icon name="trophy" size={16} />PLAY WITH THE WORLD</div>
+            <h2 id="dialog-title">Play online.</h2>
+            <p className="dialog-intro">Choose how you want to compete. You’ll need a Block Party account before joining an online game.</p>
+            <div className="online-mode-list">
+              <button onClick={requestOnlineAccess}><span className="online-mode-icon">⚡</span><span><strong>Quick Match</strong><small>Find an opponent and play instantly</small></span><Icon name="arrow" size={17} /></button>
+              <button onClick={requestOnlineAccess}><span className="online-mode-icon">♛</span><span><strong>Ranked Match</strong><small>Compete for rating and global rank</small></span><Icon name="arrow" size={17} /></button>
+              <button onClick={requestOnlineAccess}><span className="online-mode-icon">◎</span><span><strong>Private Room</strong><small>Invite a friend with a room code</small></span><Icon name="arrow" size={17} /></button>
+            </div>
+            <div className="online-availability-note"><Icon name="lock" size={14} /> Account sign-in and live matchmaking will activate after the Supabase integration.</div>
           </>}
           {dialog === 'profile' && <>
             <div className="dialog-eyebrow"><Icon name="sparkle" size={16} />YOUR PLAYER CARD</div>
