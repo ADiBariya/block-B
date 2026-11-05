@@ -14,6 +14,7 @@ import {
 } from './game/engine';
 import { gameAudio } from './game/audio';
 import { ParticleField } from './game/particles';
+import AuthScreen from './components/AuthScreen';
 
 type IconName = 'play' | 'pause' | 'restart' | 'sound' | 'muted' | 'trophy' | 'arrow' | 'close' | 'help' | 'rotate' | 'mouse' | 'sparkle' | 'check' | 'lock' | 'keyboard' | 'calendar' | 'user';
 type Status = 'ready' | 'playing' | 'paused' | 'over';
@@ -190,7 +191,12 @@ export default function App() {
   const [localStats, setLocalStats] = useState<LocalStats>(() => readStored(STATS_KEY, { gamesPlayed: 0, totalScore: 0, totalLines: 0, bestCombo: 0 }));
   const [cosmetics, setCosmetics] = useState<CosmeticChoice>(() => readStored(COSMETICS_KEY, { theme: 'cream', skin: 'classic' }));
   const [dialog, setDialog] = useState<DialogKind>(null);
-  const [mobileScreen, setMobileScreen] = useState<'home' | 'game'>('home');
+  const [mobileScreen, setMobileScreen] = useState<'auth' | 'home' | 'game'>(() => {
+    try {
+      return window.matchMedia('(max-width: 740px)').matches && localStorage.getItem('blockparty.entry.v1') !== 'offline' ? 'auth' : 'home';
+    } catch { return 'home'; }
+  });
+  const [authNotice, setAuthNotice] = useState('');
   const [selected, setSelected] = useState<number | null>(0);
   const [cursor, setCursor] = useState<Point | null>(null);
   const [inputMode, setInputMode] = useState<InputMode>('pointer');
@@ -276,20 +282,7 @@ export default function App() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!supabaseConfigured) return;
-    let active = true;
-    setIdentityState('loading');
-    void ensureAnonymousIdentity().then(() => {
-      if (active) { setIdentityState('ready'); setIdentityError(''); }
-    }).catch((error: unknown) => {
-      if (active) {
-        setIdentityState('offline');
-        setIdentityError(error instanceof Error ? error.message : 'Guest sign-in is unavailable.');
-      }
-    });
-    return () => { active = false; };
-  }, []);
+  // No automatic anonymous account is created here. Online play will require a real account after Supabase Auth is connected.
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
@@ -486,30 +479,8 @@ export default function App() {
     replayActions.current = [];
     submissionIdempotencyKey.current = null;
     setScoreVerification('none');
-    if (!supabaseConfigured) return newGame();
-    try {
-      await ensureAnonymousIdentity();
-      const session = await startRankedSession();
-      if (session.rulesetVersion !== 1 || !Number.isInteger(session.seed) || session.seed < 0 || session.seed > 0xffffffff) throw new Error('Unsupported ranked ruleset.');
-      rankedSession.current = session;
-      replayActions.current = [];
-      submissionIdempotencyKey.current = crypto.randomUUID();
-      persistReplay();
-      setIdentityState('ready');
-      setIdentityError('');
-      setRankedNotice('This round can qualify for verified worldwide rankings.');
-      return newSeededGame(session.seed, session.sessionId);
-    } catch (error) {
-      clearReplayCheckpoint();
-      rankedSession.current = null;
-      replayActions.current = [];
-      submissionIdempotencyKey.current = null;
-      setIdentityState('offline');
-      const message = error instanceof Error ? error.message : 'Guest sign-in or ranked sessions are unavailable.';
-      setIdentityError(message);
-      setRankedNotice(`${message} This round will stay on this device.`);
-      return newGame();
-    }
+    setRankedNotice('Solo play is local on this build. Sign in will be required for online modes.');
+    return newGame();
   }
 
   async function startGame() {
@@ -678,8 +649,20 @@ export default function App() {
     }
   }
 
+  function enterOfflinePlay() {
+    try { localStorage.setItem('blockparty.entry.v1', 'offline'); } catch { /* Offline play remains available for this session. */ }
+    setAuthNotice('');
+    setMobileScreen('home');
+  }
+
+  function requestOnlineAccess() {
+    setDialog(null);
+    setAuthNotice('Sign in or create an account to use online matchmaking and worldwide rankings. Account services will be connected in the Supabase integration stage.');
+    setMobileScreen('auth');
+  }
+
   function openGlobalLeaderboard() {
-    openDialog('global');
+    requestOnlineAccess();
   }
 
   useEffect(() => {
@@ -1046,7 +1029,8 @@ export default function App() {
   const showStarterHint = game.moves === 0 && selected === 0 && !!activePiece && pieceSize(activePiece).rows === 1;
 
   return (
-    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin}`}>
+    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin} ${mobileScreen === 'auth' ? 'screen-auth' : ''} ${mobileScreen === 'game' ? 'screen-game' : ''}`}>
+      <AuthScreen notice={authNotice} onPlayOffline={enterOfflinePlay} />
       <header className="site-header">
         <a className="brand" href="#game" aria-label="Block Party home" onClick={(event) => { event.preventDefault(); closeDialog(); if (statusRef.current === 'playing') changeStatus('paused'); setMobileScreen('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
           <BrandMark /><span>blockparty<span className="brand-period">.</span></span>
@@ -1073,8 +1057,8 @@ export default function App() {
           <div className="mobile-home-heading">
             <div>
               <span className="mobile-home-eyebrow"><span />A LITTLE BREAK, WELL SPENT</span>
-              <h1>{status === 'over' ? 'Ready for another round?' : mobileCanContinue ? 'Welcome back.' : 'Ready for a little fun?'}</h1>
-              <p>{game.moves > 0 ? 'Your next good move is waiting.' : 'Make a little space for something good.'}</p>
+              <h1>Block Party</h1>
+              <p>Match · Clear · Compete</p>
             </div>
             <button className="mobile-home-profile" onClick={() => openDialog('profile')} aria-label="Open profile">
               <Icon name="user" size={21} />
@@ -1083,9 +1067,9 @@ export default function App() {
 
           <section className="mobile-home-hero" aria-label="Start playing">
             <div className="mobile-home-hero-copy">
-              <span className="mobile-home-hero-kicker">YOUR HAPPY PLACE</span>
-              <h2>{status === 'over' ? 'Your next little win starts here.' : mobileCanContinue ? 'Pick up where you left off.' : 'Your next little win starts here.'}</h2>
-              <p>{status === 'over' ? 'That was a good round. Ready for another?' : mobileCanContinue ? 'Your round is saved on this device.' : 'No timers. No pressure. Just one more round.'}</p>
+              <span className="mobile-home-hero-kicker">CLASSIC MODE</span>
+              <h2>{status === 'over' ? 'Ready for another round?' : mobileCanContinue ? 'Continue your game.' : 'Make your next move.'}</h2>
+              <p>{status === 'over' ? 'A fresh board is ready when you are.' : mobileCanContinue ? 'Your solo round is saved on this device.' : 'Place blocks, clear lines and build combos.'}</p>
               <button
                 className="primary-button mobile-home-play"
                 onClick={() => { if (status === 'over') void restartGame(); else void startGame(); }}
@@ -1093,9 +1077,10 @@ export default function App() {
                 aria-label={startPending ? 'Connecting' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
               >
                 <Icon name="play" size={16} />
-                {startPending ? 'Connecting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
+                {startPending ? 'Starting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Continue solo' : 'Play solo'}
                 <Icon name="arrow" size={17} />
               </button>
+              <button className="mobile-home-online" onClick={requestOnlineAccess}><Icon name="trophy" size={16} />Play online <span>Sign in required</span></button>
               {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
             </div>
             <div className="mobile-home-art" aria-hidden="true">
@@ -1262,17 +1247,14 @@ export default function App() {
       </main>
 
       <nav className="mobile-bottom-nav" aria-label="Primary navigation">
-        <button className="mobile-bottom-tab is-active" onClick={() => {
+        <button className={`mobile-bottom-tab ${mobileScreen === 'home' ? 'is-active' : ''}`} onClick={() => {
           if (dialog) closeDialog();
-          setMobileScreen('game');
-          if (status === 'ready') void startGame();
-          else if (status === 'over') void restartGame();
-          else if (status === 'paused') togglePause();
-          else focusBoard();
-        }} aria-current={mobileScreen === 'game' ? 'page' : undefined}>
-          <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Play</span>
+          if (statusRef.current === 'playing') changeStatus('paused');
+          setMobileScreen('home');
+        }} aria-current={mobileScreen === 'home' ? 'page' : undefined}>
+          <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Home</span>
         </button>
-        <button className="mobile-bottom-tab" onClick={() => openDialog('daily')}>
+        <button className={`mobile-bottom-tab ${dialog === 'daily' ? 'is-active' : ''}`} onClick={() => openDialog('daily')}>
           <span className="mobile-bottom-icon"><Icon name="calendar" size={18} /></span><span>Daily</span>
         </button>
         <button className="mobile-bottom-tab" onClick={openGlobalLeaderboard} aria-label="Leaderboard">
