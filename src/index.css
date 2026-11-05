@@ -1155,7 +1155,8 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 500; min-width: 16px; h
 .auth-mode-tabs button { min-height: 34px; border-radius: 8px; background: transparent; color: #887c94; font-size: 10px; font-weight: 700; }
 .auth-mode-tabs button.is-selected { background: #fff; color: #634685; box-shadow: 0 2px 7px #3e2a5216; }
 .auth-form { display: grid; gap: 11px; margin-top: 15px; }
-.auth-form label { display: grid; gap: 6px; color: #6c5c7b; font-size: 9px; font-weight: 750; }
+.auth-form label, .auth-field > label { display: grid; gap: 6px; color: #6c5c7b; font-size: 9px; font-weight: 750; }
+.auth-field { display: grid; gap: 6px; }
 .auth-form input { width: 100%; min-width: 0; height: 43px; padding: 0 12px; border: 1px solid #e6dce9; border-radius: 10px; background: #fff; color: #392d47; font: inherit; font-size: 11px; outline: none; }
 .auth-form input:focus { border-color: #a98bd0; box-shadow: 0 0 0 3px #b99fe32a; }
 .auth-form input::placeholder { color: #b6aeba; }
