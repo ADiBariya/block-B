@@ -4,6 +4,7 @@ test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true
 
 async function enterOffline(page: Page) {
   await page.getByRole('button', { name: 'Play solo offline' }).tap();
+  await page.getByRole('button', { name: 'Skip' }).tap();
 }
 
 test('mobile starts with account entry and offers honest offline play', async ({ page }) => {
@@ -12,7 +13,13 @@ test('mobile starts with account entry and offers honest offline play', async ({
   await expect(page.getByRole('button', { name: 'Continue with Google' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Continue with Apple' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Play solo offline' })).toBeVisible();
-  await enterOffline(page);
+  await page.getByRole('button', { name: 'Play solo offline' }).tap();
+  await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
+  await page.getByRole('button', { name: 'Next' }).tap();
+  await expect(page.getByRole('heading', { name: 'Clear Lines' })).toBeVisible();
+  await page.getByRole('button', { name: 'Next' }).tap();
+  await expect(page.getByRole('heading', { name: 'Build Combos' })).toBeVisible();
+  await page.getByRole('button', { name: 'Let’s play' }).tap();
   await expect(page.getByRole('region', { name: 'Block Party home' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Play online' })).toBeVisible();
