@@ -52,10 +52,10 @@ test('settings persist sound, haptic and motion preferences', async ({ page }) =
   await expect(page.getByRole('checkbox', { name: /Motion effects/ })).not.toBeChecked();
 });
 
-test('leaderboard labels weekly rankings unavailable and shows no fabricated entries offline', async ({ page }) => {
+test('online leaderboard requires a real signed-in account', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Global', exact: true }).click();
-  await expect(page.getByRole('tab', { name: /All time/ })).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByRole('tab', { name: /Weekly/ })).toBeDisabled();
+  await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+  await expect(page.locator('.auth-notice')).toContainText('Sign in or create an account');
   await expect(page.locator('.global-rank-row')).toHaveCount(0);
 });

@@ -4,7 +4,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { ensureAnonymousIdentity, supabaseConfigured } from './services/supabase';
-import { loadGlobalPage, renameGlobalPlayer, searchGlobalPlayers, startRankedSession, submitRankedScore, subscribeToGlobalScores } from './services/leaderboardApi';
+import { loadGlobalPage, renameGlobalPlayer, searchGlobalPlayers, submitRankedScore, subscribeToGlobalScores } from './services/leaderboardApi';
 import { appendUniqueEntries, EventDeduper, nextCursor, validateUsername, type RankEntry, type ScoreNotice } from './game/leaderboard';
 import { MAX_REPLAY_ACTIONS, replayGame, type ReplayAction } from './game/competitive';
 import {
@@ -14,10 +14,12 @@ import {
 } from './game/engine';
 import { gameAudio } from './game/audio';
 import { ParticleField } from './game/particles';
+import AuthScreen from './components/AuthScreen';
+import OnboardingScreen from './components/OnboardingScreen';
 
 type IconName = 'play' | 'pause' | 'restart' | 'sound' | 'muted' | 'trophy' | 'arrow' | 'close' | 'help' | 'rotate' | 'mouse' | 'sparkle' | 'check' | 'lock' | 'keyboard' | 'calendar' | 'user';
 type Status = 'ready' | 'playing' | 'paused' | 'over';
-type DialogKind = 'help' | 'scores' | 'global' | 'daily' | 'profile' | 'statistics' | 'collection' | 'shop' | 'settings' | null;
+type DialogKind = 'help' | 'scores' | 'global' | 'daily' | 'online' | 'profile' | 'statistics' | 'collection' | 'shop' | 'settings' | null;
 type LocalStats = { gamesPlayed: number; totalScore: number; totalLines: number; bestCombo: number };
 type CosmeticChoice = { theme: 'cream' | 'lavender' | 'mint'; skin: 'classic' | 'gloss' | 'outline' };
 const STATS_KEY = 'blockparty.stats.v1';
@@ -190,7 +192,14 @@ export default function App() {
   const [localStats, setLocalStats] = useState<LocalStats>(() => readStored(STATS_KEY, { gamesPlayed: 0, totalScore: 0, totalLines: 0, bestCombo: 0 }));
   const [cosmetics, setCosmetics] = useState<CosmeticChoice>(() => readStored(COSMETICS_KEY, { theme: 'cream', skin: 'classic' }));
   const [dialog, setDialog] = useState<DialogKind>(null);
-  const [mobileScreen, setMobileScreen] = useState<'home' | 'game'>('home');
+  const [mobileScreen, setMobileScreen] = useState<'auth' | 'onboarding' | 'home' | 'game'>(() => {
+    try {
+      if (!window.matchMedia('(max-width: 740px)').matches) return 'home';
+      if (localStorage.getItem('blockparty.entry.v1') !== 'offline') return 'auth';
+      return localStorage.getItem('blockparty.onboarding.v1') === 'complete' ? 'home' : 'onboarding';
+    } catch { return 'home'; }
+  });
+  const [authNotice, setAuthNotice] = useState('');
   const [selected, setSelected] = useState<number | null>(0);
   const [cursor, setCursor] = useState<Point | null>(null);
   const [inputMode, setInputMode] = useState<InputMode>('pointer');
@@ -203,7 +212,7 @@ export default function App() {
   const [isRecord, setIsRecord] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
   const [liveMessage, setLiveMessage] = useState('Welcome to Block Party. Press Enter to play.');
-  const [identityState, setIdentityState] = useState<'unconfigured' | 'loading' | 'ready' | 'offline'>(supabaseConfigured ? 'loading' : 'unconfigured');
+  const [identityState, setIdentityState] = useState<'unconfigured' | 'loading' | 'ready' | 'offline'>('unconfigured');
   const [identityError, setIdentityError] = useState('');
   const [rankedNotice, setRankedNotice] = useState('');
   const [startPending, setStartPending] = useState(false);
@@ -265,10 +274,6 @@ export default function App() {
 
   useEffect(() => {
     if (canvasRef.current) particles.current = new ParticleField(canvasRef.current);
-    if (Capacitor.isNativePlatform()) {
-      void StatusBar.setStyle({ style: Style.Light });
-      void StatusBar.setBackgroundColor({ color: '#f8f7f4' });
-    }
     return () => {
       particles.current?.destroy();
       Object.values(timers.current).forEach(clearTimeout);
@@ -277,19 +282,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!supabaseConfigured) return;
-    let active = true;
-    setIdentityState('loading');
-    void ensureAnonymousIdentity().then(() => {
-      if (active) { setIdentityState('ready'); setIdentityError(''); }
-    }).catch((error: unknown) => {
-      if (active) {
-        setIdentityState('offline');
-        setIdentityError(error instanceof Error ? error.message : 'Guest sign-in is unavailable.');
-      }
-    });
-    return () => { active = false; };
-  }, []);
+    if (!Capacitor.isNativePlatform()) return;
+    const isGame = mobileScreen === 'game';
+    void StatusBar.setStyle({ style: isGame ? Style.Light : Style.Dark });
+    void StatusBar.setBackgroundColor({ color: isGame ? '#241a35' : mobileScreen === 'auth' ? '#eee5f8' : '#f8f7f4' });
+  }, [mobileScreen]);
+
+  // No automatic anonymous account is created here. Online play will require a real account after Supabase Auth is connected.
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
@@ -486,30 +485,8 @@ export default function App() {
     replayActions.current = [];
     submissionIdempotencyKey.current = null;
     setScoreVerification('none');
-    if (!supabaseConfigured) return newGame();
-    try {
-      await ensureAnonymousIdentity();
-      const session = await startRankedSession();
-      if (session.rulesetVersion !== 1 || !Number.isInteger(session.seed) || session.seed < 0 || session.seed > 0xffffffff) throw new Error('Unsupported ranked ruleset.');
-      rankedSession.current = session;
-      replayActions.current = [];
-      submissionIdempotencyKey.current = crypto.randomUUID();
-      persistReplay();
-      setIdentityState('ready');
-      setIdentityError('');
-      setRankedNotice('This round can qualify for verified worldwide rankings.');
-      return newSeededGame(session.seed, session.sessionId);
-    } catch (error) {
-      clearReplayCheckpoint();
-      rankedSession.current = null;
-      replayActions.current = [];
-      submissionIdempotencyKey.current = null;
-      setIdentityState('offline');
-      const message = error instanceof Error ? error.message : 'Guest sign-in or ranked sessions are unavailable.';
-      setIdentityError(message);
-      setRankedNotice(`${message} This round will stay on this device.`);
-      return newGame();
-    }
+    setRankedNotice('Solo play is local on this build. Sign in will be required for online modes.');
+    return newGame();
   }
 
   async function startGame() {
@@ -678,8 +655,27 @@ export default function App() {
     }
   }
 
+  function enterOfflinePlay() {
+    try { localStorage.setItem('blockparty.entry.v1', 'offline'); } catch { /* Offline play remains available for this session. */ }
+    setAuthNotice('');
+    try {
+      setMobileScreen(localStorage.getItem('blockparty.onboarding.v1') === 'complete' ? 'home' : 'onboarding');
+    } catch { setMobileScreen('home'); }
+  }
+
+  function finishOnboarding() {
+    try { localStorage.setItem('blockparty.onboarding.v1', 'complete'); } catch { /* The tutorial can still be skipped for this session. */ }
+    setMobileScreen('home');
+  }
+
+  function requestOnlineAccess() {
+    setDialog(null);
+    setAuthNotice('Sign in or create an account to use online matchmaking and worldwide rankings. Account services will be connected in the Supabase integration stage.');
+    setMobileScreen('auth');
+  }
+
   function openGlobalLeaderboard() {
-    openDialog('global');
+    requestOnlineAccess();
   }
 
   useEffect(() => {
@@ -1046,7 +1042,9 @@ export default function App() {
   const showStarterHint = game.moves === 0 && selected === 0 && !!activePiece && pieceSize(activePiece).rows === 1;
 
   return (
-    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin}`}>
+    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin} ${mobileScreen === 'auth' ? 'screen-auth' : ''} ${mobileScreen === 'onboarding' ? 'screen-onboarding' : ''} ${mobileScreen === 'game' ? 'screen-game' : ''}`}>
+      <AuthScreen notice={authNotice} onPlayOffline={enterOfflinePlay} />
+      <OnboardingScreen onSkip={finishOnboarding} onComplete={finishOnboarding} />
       <header className="site-header">
         <a className="brand" href="#game" aria-label="Block Party home" onClick={(event) => { event.preventDefault(); closeDialog(); if (statusRef.current === 'playing') changeStatus('paused'); setMobileScreen('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
           <BrandMark /><span>blockparty<span className="brand-period">.</span></span>
@@ -1073,8 +1071,8 @@ export default function App() {
           <div className="mobile-home-heading">
             <div>
               <span className="mobile-home-eyebrow"><span />A LITTLE BREAK, WELL SPENT</span>
-              <h1>{status === 'over' ? 'Ready for another round?' : mobileCanContinue ? 'Welcome back.' : 'Ready for a little fun?'}</h1>
-              <p>{game.moves > 0 ? 'Your next good move is waiting.' : 'Make a little space for something good.'}</p>
+              <h1>Block Party</h1>
+              <p>Match · Clear · Compete</p>
             </div>
             <button className="mobile-home-profile" onClick={() => openDialog('profile')} aria-label="Open profile">
               <Icon name="user" size={21} />
@@ -1083,20 +1081,9 @@ export default function App() {
 
           <section className="mobile-home-hero" aria-label="Start playing">
             <div className="mobile-home-hero-copy">
-              <span className="mobile-home-hero-kicker">YOUR HAPPY PLACE</span>
-              <h2>{status === 'over' ? 'Your next little win starts here.' : mobileCanContinue ? 'Pick up where you left off.' : 'Your next little win starts here.'}</h2>
-              <p>{status === 'over' ? 'That was a good round. Ready for another?' : mobileCanContinue ? 'Your round is saved on this device.' : 'No timers. No pressure. Just one more round.'}</p>
-              <button
-                className="primary-button mobile-home-play"
-                onClick={() => { if (status === 'over') void restartGame(); else void startGame(); }}
-                disabled={startPending}
-                aria-label={startPending ? 'Connecting' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
-              >
-                <Icon name="play" size={16} />
-                {startPending ? 'Connecting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
-                <Icon name="arrow" size={17} />
-              </button>
-              {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
+              <span className="mobile-home-hero-kicker">CLASSIC MODE</span>
+              <h2>{status === 'over' ? 'Ready for another round?' : mobileCanContinue ? 'Continue your game.' : 'Make your next move.'}</h2>
+              <p>{status === 'over' ? 'A fresh board is ready when you are.' : mobileCanContinue ? 'Your solo round is saved on this device.' : 'Place blocks, clear lines and build combos.'}</p>
             </div>
             <div className="mobile-home-art" aria-hidden="true">
               <span className="mobile-home-art-sparkle">✦</span>
@@ -1109,6 +1096,25 @@ export default function App() {
                 ))}
               </div>
             </div>
+          </section>
+
+          <section className="mobile-home-modes" aria-label="Game modes">
+            <button className="mobile-home-online" aria-label="Play online" onClick={() => openDialog('online')}>
+              <Icon name="trophy" size={19} />
+              <span className="mobile-mode-copy"><strong>Play Online</strong><small>Quick match · Ranked · Friends</small></span>
+              <Icon name="arrow" size={18} />
+            </button>
+            <button
+              className="primary-button mobile-home-play"
+              onClick={() => { if (status === 'over') void restartGame(); else void startGame(); }}
+              disabled={startPending}
+              aria-label={startPending ? 'Starting' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
+            >
+              <Icon name="play" size={18} />
+              <span>{startPending ? 'Starting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Continue solo' : 'Play Solo'}</span>
+              <Icon name="arrow" size={18} />
+            </button>
+            {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
           </section>
 
           <button className="mobile-home-daily" onClick={() => openDialog('daily')} aria-label="Daily challenge">
@@ -1206,6 +1212,7 @@ export default function App() {
                 <h2>Take your time.</h2><p>Your blocks aren't going anywhere.</p>
                 <button className="primary-button" onClick={togglePause}><Icon name="play" size={17} />Keep the good going</button>
                 <button className="overlay-text-button" onClick={restartGame}><Icon name="restart" size={14} />Start fresh instead</button>
+                <button className="overlay-text-button" onClick={() => setMobileScreen('home')}>Back to home <Icon name="arrow" size={14} /></button>
               </div>}
 
               {status === 'over' && <div className="board-overlay gameover-screen">
@@ -1216,6 +1223,7 @@ export default function App() {
                 <p>{game.lines} {game.lines === 1 ? 'line' : 'lines'} cleared{game.bestCombo > 1 ? ` / ${game.bestCombo}x best combo` : ''}</p>
                 <button className="primary-button" onClick={restartGame}><Icon name="restart" size={17} />One more round<Icon name="arrow" size={18} /></button>
                 <button className="overlay-text-button" onClick={() => openDialog('scores')}>See your best runs<Icon name="arrow" size={14} /></button>
+                <button className="overlay-text-button" onClick={() => setMobileScreen('home')}>Back to home <Icon name="arrow" size={14} /></button>
               </div>}
             </div>
 
@@ -1262,17 +1270,14 @@ export default function App() {
       </main>
 
       <nav className="mobile-bottom-nav" aria-label="Primary navigation">
-        <button className="mobile-bottom-tab is-active" onClick={() => {
+        <button className={`mobile-bottom-tab ${mobileScreen === 'home' ? 'is-active' : ''}`} onClick={() => {
           if (dialog) closeDialog();
-          setMobileScreen('game');
-          if (status === 'ready') void startGame();
-          else if (status === 'over') void restartGame();
-          else if (status === 'paused') togglePause();
-          else focusBoard();
-        }} aria-current={mobileScreen === 'game' ? 'page' : undefined}>
-          <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Play</span>
+          if (statusRef.current === 'playing') changeStatus('paused');
+          setMobileScreen('home');
+        }} aria-current={mobileScreen === 'home' ? 'page' : undefined}>
+          <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Home</span>
         </button>
-        <button className="mobile-bottom-tab" onClick={() => openDialog('daily')}>
+        <button className={`mobile-bottom-tab ${dialog === 'daily' ? 'is-active' : ''}`} onClick={() => openDialog('daily')}>
           <span className="mobile-bottom-icon"><Icon name="calendar" size={18} /></span><span>Daily</span>
         </button>
         <button className="mobile-bottom-tab" onClick={openGlobalLeaderboard} aria-label="Leaderboard">
@@ -1309,13 +1314,25 @@ export default function App() {
             <div className="feature-stat-grid"><div><strong>{new Date().toLocaleDateString(undefined, { weekday: 'long' })}</strong><span>Today’s date</span></div><div><strong>Same seed all day</strong><span>One shared local challenge</span></div></div>
             <button className="primary-button dialog-primary" onClick={startDailyChallenge}><Icon name="play" size={17} />Play today’s challenge<Icon name="arrow" size={18} /></button>
           </>}
+          {dialog === 'online' && <>
+            <div className="dialog-eyebrow"><Icon name="trophy" size={16} />PLAY WITH THE WORLD</div>
+            <h2 id="dialog-title">Play online.</h2>
+            <p className="dialog-intro">Choose how you want to compete. You’ll need a Block Party account before joining an online game.</p>
+            <div className="online-mode-list">
+              <button onClick={requestOnlineAccess}><span className="online-mode-icon">⚡</span><span><strong>Quick Match</strong><small>Find an opponent and play instantly</small></span><Icon name="arrow" size={17} /></button>
+              <button onClick={requestOnlineAccess}><span className="online-mode-icon">♛</span><span><strong>Ranked Match</strong><small>Compete for rating and global rank</small></span><Icon name="arrow" size={17} /></button>
+              <button onClick={requestOnlineAccess}><span className="online-mode-icon">◎</span><span><strong>Private Room</strong><small>Invite a friend with a room code</small></span><Icon name="arrow" size={17} /></button>
+            </div>
+            <div className="online-availability-note"><Icon name="lock" size={14} /> Account sign-in and live matchmaking will activate after the Supabase integration.</div>
+          </>}
           {dialog === 'profile' && <>
             <div className="dialog-eyebrow"><Icon name="sparkle" size={16} />YOUR PLAYER CARD</div>
             <h2 id="dialog-title">A little about you.</h2>
-            <p className="dialog-intro">Your local profile stays on this device. Global guest identity is separate and only appears when the leaderboard backend is configured.</p>
+            <p className="dialog-intro">Your solo progress is saved on this device. Sign in when online accounts are connected to sync your player identity and compete.</p>
             <div className="profile-card"><BrandMark /><div><strong>{identityState === 'ready' && globalUsername ? globalUsername : 'Block Party player'}</strong><span>{identityState === 'ready' ? 'Guest profile connected' : 'Local player profile'}</span></div><span className="profile-badge">{identityState === 'ready' ? 'GUEST' : 'LOCAL'}</span></div>
             <div className="feature-stat-grid"><div><strong>{(scores[0]?.score ?? 0).toLocaleString()}</strong><span>Personal best</span></div><div><strong>{localStats.gamesPlayed}</strong><span>Games played</span></div><div><strong>{localStats.totalLines}</strong><span>Lines cleared</span></div><div><strong>{localStats.bestCombo}×</strong><span>Best combo</span></div></div>
-            <button className="secondary-feature-button" onClick={() => openGlobalLeaderboard()}>Global leaderboard and username <Icon name="arrow" size={16} /></button>
+            <button className="secondary-feature-button" onClick={requestOnlineAccess}>Account &amp; Security <Icon name="arrow" size={16} /></button>
+            <button className="secondary-feature-button" onClick={openGlobalLeaderboard}>Global leaderboard <Icon name="arrow" size={16} /></button>
           </>}
           {dialog === 'profile' && <div className="profile-shortcuts" aria-label="More profile options">
             <button onClick={() => setDialog('statistics')}><Icon name="trophy" size={16} />Statistics</button>
@@ -1356,7 +1373,7 @@ export default function App() {
               <label><span><strong>Haptics</strong><small>Gentle feedback after moves</small></span><input type="checkbox" checked={hapticsEnabled} onChange={(event) => setHapticsEnabled(event.target.checked)} /></label>
               <label><span><strong>Motion effects</strong><small>Celebrations and animated transitions</small></span><input type="checkbox" checked={motionEnabled} onChange={(event) => setMotionEnabled(event.target.checked)} /></label>
             </div>
-            <div className="settings-info"><strong>Privacy</strong><p>Local scores and preferences stay on this device. If the global leaderboard is configured, only replay-verified ranked results and your guest profile are sent to Supabase.</p></div>
+            <div className="settings-info"><strong>Privacy</strong><p>Solo scores and preferences stay on this device. Online accounts, cloud saves, matchmaking and ranked score uploads will be enabled after the Supabase Auth and backend integration.</p></div>
             <div className="settings-info"><strong>Support</strong><p>Support contact is not configured yet. App version 1.0.0 · Block Party.</p></div>
           </>}
           {dialog === 'help' && <>

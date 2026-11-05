@@ -1,32 +1,74 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
 
-test('mobile home is the first screen and primary navigation stays available', async ({ page }) => {
+async function enterOffline(page: Page) {
+  await page.getByRole('button', { name: 'Play solo offline' }).tap();
+  await page.getByRole('button', { name: 'Skip' }).tap();
+}
+
+test('mobile starts with account entry and offers honest offline play', async ({ page }) => {
   await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Continue with Google' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Continue with Apple' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Play solo offline' })).toBeVisible();
+  await page.getByRole('button', { name: 'Play solo offline' }).tap();
+  await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
+  await page.getByRole('button', { name: 'Next' }).tap();
+  await expect(page.getByRole('heading', { name: 'Clear Lines' })).toBeVisible();
+  await page.getByRole('button', { name: 'Next' }).tap();
+  await expect(page.getByRole('heading', { name: 'Build Combos' })).toBeVisible();
+  await page.getByRole('button', { name: 'Let’s play' }).tap();
   await expect(page.getByRole('region', { name: 'Block Party home' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Ready for a little fun?' })).toBeVisible();
-  await expect(page.getByRole('button', { name: "Let's play" })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Play online' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Leaderboard' })).toBeVisible();
+  await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Leaderboard' })).toBeVisible();
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' })).toBeVisible();
 });
 
-test('mobile play enters gameplay and the brand returns to the home hub', async ({ page }) => {
+test('sign-in form reports that authentication is not connected yet', async ({ page }) => {
   await page.goto('/');
+  await page.getByLabel('Email address').fill('player@example.com');
+  await page.locator('#auth-password').fill('valid-password-123');
+  await page.locator('.auth-form').getByRole('button', { name: 'Sign in' }).click();
+  await expect(page.locator('.auth-message')).toContainText('No session was created');
+});
+
+test('online mode options require a real account before entering matchmaking', async ({ page }) => {
+  await page.goto('/');
+  await enterOffline(page);
+  await page.getByRole('button', { name: 'Play online' }).tap();
+  await expect(page.getByRole('heading', { name: 'Play online.' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Quick Match/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Ranked Match/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Private Room/ })).toBeVisible();
+  await page.getByRole('button', { name: /Quick Match/ }).tap();
+  await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+  await expect(page.locator('.auth-notice')).toContainText('Sign in or create an account');
+});
+
+test('mobile play enters immersive gameplay and the brand returns home', async ({ page }) => {
+  await page.goto('/');
+  await enterOffline(page);
   await page.getByRole('button', { name: "Let's play" }).tap();
   await expect(page.locator('.mobile-home-screen')).toBeHidden();
   await expect(page.locator('.board-grid')).toBeVisible();
-  await expect(page.locator('.score-value')).toHaveAttribute('aria-label', 'Score 0');
-  await page.getByRole('link', { name: 'Block Party home' }).tap();
-  await expect(page.getByRole('heading', { name: 'Welcome back.' })).toBeVisible();
+  await expect(page.locator('.site-shell')).toHaveClass(/screen-game/);
+  await expect(page.locator('.site-header')).toBeHidden();
+  await expect(page.locator('.mobile-bottom-nav')).toBeHidden();
+  await page.getByRole('button', { name: 'Pause game' }).tap();
+  await page.getByRole('button', { name: 'Back to home' }).tap();
+  await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Keep playing' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Start a fresh game' })).toBeVisible();
 });
 
-test('daily challenge can be opened from the bottom navigation and starts gameplay', async ({ page }) => {
+test('daily challenge can be opened from bottom navigation and starts local gameplay', async ({ page }) => {
   await page.goto('/');
+  await enterOffline(page);
   await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' }).tap();
   await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
   await page.getByRole('button', { name: 'Play today’s challenge' }).tap();
@@ -35,8 +77,9 @@ test('daily challenge can be opened from the bottom navigation and starts gamepl
   await expect(page.locator('.score-value')).toHaveAttribute('aria-label', 'Score 0');
 });
 
-test('profile contains secondary player destinations without crowding the bottom navigation', async ({ page }) => {
+test('profile contains secondary player destinations without crowding navigation', async ({ page }) => {
   await page.goto('/');
+  await enterOffline(page);
   await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' }).tap();
   await expect(page.getByRole('heading', { name: 'A little about you.' })).toBeVisible();
   const shortcuts = page.locator('.profile-shortcuts');
