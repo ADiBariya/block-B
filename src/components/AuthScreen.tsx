@@ -80,11 +80,11 @@ export default function AuthScreen({ notice, onPlayOffline }: AuthScreenProps) {
             <>
               <div className="auth-provider-stack">
                 <button className="auth-provider-button" type="button" onClick={() => handleProvider('Google')}>
-                  <span className="auth-provider-letter" aria-hidden="true">G</span>
+                  <span className="auth-provider-glyph" aria-hidden="true">✦</span>
                   Continue with Google
                 </button>
                 <button className="auth-provider-button" type="button" onClick={() => handleProvider('Apple')}>
-                  <span className="auth-provider-symbol" aria-hidden="true">A</span>
+                  <span className="auth-provider-glyph" aria-hidden="true">◈</span>
                   Continue with Apple
                 </button>
               </div>
