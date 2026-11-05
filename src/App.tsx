@@ -1316,12 +1316,12 @@ export default function App() {
             <div className="feature-stat-grid"><div><strong>{(scores[0]?.score ?? 0).toLocaleString()}</strong><span>Personal best</span></div><div><strong>{localStats.gamesPlayed}</strong><span>Games played</span></div><div><strong>{localStats.totalLines}</strong><span>Lines cleared</span></div><div><strong>{localStats.bestCombo}×</strong><span>Best combo</span></div></div>
             <button className="secondary-feature-button" onClick={() => openGlobalLeaderboard()}>Global leaderboard and username <Icon name="arrow" size={16} /></button>
           </>}
-          <div className="profile-shortcuts" aria-label="More profile options">
+          {dialog === 'profile' && <div className="profile-shortcuts" aria-label="More profile options">
             <button onClick={() => setDialog('statistics')}><Icon name="trophy" size={16} />Statistics</button>
             <button onClick={() => setDialog('collection')}><Icon name="sparkle" size={16} />Collection</button>
             <button onClick={() => setDialog('shop')}><Icon name="lock" size={16} />Shop</button>
             <button onClick={() => setDialog('settings')}><Icon name="keyboard" size={16} />Settings</button>
-          </div>
+          </div>}
           {dialog === 'statistics' && <>
             <div className="dialog-eyebrow"><Icon name="trophy" size={16} />YOUR LITTLE MILESTONES</div>
             <h2 id="dialog-title">The good stuff, counted.</h2>
