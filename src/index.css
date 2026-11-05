@@ -1093,6 +1093,7 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 500; min-width: 16px; h
 
 @media (max-width: 380px) {
   .site-shell { padding-left: 14px; padding-right: 14px; }
+  .site-header { margin-left: -14px; margin-right: -14px; padding-left: 14px; padding-right: 14px; }
   .mobile-home-hero { min-height: 194px; padding-left: 15px; }
   .mobile-home-hero-copy { width: 68%; }
   .mobile-home-art { right: 0; transform: translateY(-50%) rotate(7deg) scale(.88); }
