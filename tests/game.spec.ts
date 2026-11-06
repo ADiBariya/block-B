@@ -152,6 +152,8 @@ test.describe('mobile touch controls', () => {
 
   test('tap selection and placement work on a touch screen', async ({ page }) => {
     await page.goto('/');
+    await expect(page.locator('.splash-screen')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
     await page.getByRole('button', { name: 'Get Started' }).tap();
     await page.getByRole('button', { name: "Let's play" }).tap();
     await page.getByRole('button', { name: 'Select block 3: 4 mint squares' }).tap();
@@ -167,6 +169,8 @@ test.describe('mobile touch controls', () => {
 
   test('real touch dragging lifts the block above the finger and places it', async ({ page }) => {
     await page.goto('/');
+    await expect(page.locator('.splash-screen')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
     await page.getByRole('button', { name: 'Get Started' }).tap();
     await page.getByRole('button', { name: "Let's play" }).tap();
     const source = (await page.locator('.piece-button').first().boundingBox())!;
