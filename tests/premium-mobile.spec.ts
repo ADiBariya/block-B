@@ -52,9 +52,9 @@ test('first mobile launch shows splash, sign-in, onboarding, then home', async (
   await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
   await page.getByRole('button', { name: 'Next' }).tap();
   await expect(page.getByRole('region', { name: 'Block Party home' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
+  await expect(page.locator('.home-brand-logo')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Play online' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Play Solo' })).toBeVisible();
+  await expect(page.locator('.home-action-solo')).toContainText('Play Solo');
   await expect(page.getByRole('button', { name: 'Daily Challenge' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Missions' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Pass' })).toBeVisible();
