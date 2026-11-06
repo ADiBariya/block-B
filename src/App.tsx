@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, SystemBars, SystemBarsStyle } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
-import { StatusBar, Style } from '@capacitor/status-bar';
 import { ensureAnonymousIdentity, supabaseConfigured } from './services/supabase';
 import { loadGlobalPage, renameGlobalPlayer, searchGlobalPlayers, submitRankedScore, subscribeToGlobalScores } from './services/leaderboardApi';
 import { appendUniqueEntries, EventDeduper, nextCursor, validateUsername, type RankEntry, type ScoreNotice } from './game/leaderboard';
@@ -289,8 +288,9 @@ export default function App() {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     const isGame = mobileScreen === 'game';
-    void StatusBar.setStyle({ style: isGame ? Style.Light : Style.Dark });
-    void StatusBar.setBackgroundColor({ color: isGame ? '#241a35' : mobileScreen === 'auth' || mobileScreen === 'onboarding' ? '#eee4f8' : '#f8f7f4' });
+    // Capacitor 8 SystemBars works with Android's enforced edge-to-edge layout.
+    // Dark icons are used on the light onboarding/home surfaces; the game uses light icons.
+    void SystemBars.setStyle({ style: isGame ? SystemBarsStyle.Dark : SystemBarsStyle.Light });
   }, [mobileScreen]);
 
   // No automatic anonymous account is created here. Online play will require a real account after Supabase Auth is connected.
