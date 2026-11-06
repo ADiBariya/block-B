@@ -166,7 +166,7 @@ export default function AuthScreen({ notice, onPlayOffline }: AuthScreenProps) {
               </div>
 
               <div className="auth-divider signin-divider"><span />or<span /></div>
-              <button className="auth-create-link" type="button" onClick={() => changeMode('register')}>Create an Account</button>
+              <button className="auth-create-link signin-create-link" type="button" onClick={() => changeMode('register')}>Create an Account</button>
               <p className="auth-legal signin-legal">By continuing you agree to our<br /><a href="#terms" onClick={(event) => event.preventDefault()}>Terms &amp; Privacy Policy</a></p>
               <button className="signin-offline-link" type="button" onClick={onPlayOffline}>Continue offline</button>
             </>
