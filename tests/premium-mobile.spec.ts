@@ -3,23 +3,20 @@ import { expect, test, type Page } from '@playwright/test';
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
 
 async function enterOffline(page: Page) {
-  await page.getByRole('button', { name: 'Play solo offline' }).tap();
-  await page.getByRole('button', { name: 'Skip' }).tap();
+  await page.getByRole('button', { name: 'Get Started' }).tap();
 }
 
-test('mobile starts with account entry and offers honest offline play', async ({ page }) => {
+test('first mobile launch shows onboarding before home or sign in', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Continue with Google' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Continue with Apple' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Play solo offline' })).toBeVisible();
-  await page.getByRole('button', { name: 'Play solo offline' }).tap();
   await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
   await expect(page.locator('.onboarding-block-art')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Skip' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Get Started' })).toBeVisible();
   await expect(page.locator('.onboarding-dots span')).toHaveCount(3);
   await expect(page.locator('.onboarding-dots span.is-active')).toHaveCount(1);
+  await expect(page.locator('.mobile-home-screen')).toBeHidden();
+  await expect(page.locator('.auth-screen')).toBeHidden();
+
   await page.getByRole('button', { name: 'Get Started' }).tap();
   await expect(page.getByRole('region', { name: 'Block Party home' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
@@ -28,10 +25,17 @@ test('mobile starts with account entry and offers honest offline play', async ({
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' })).toBeVisible();
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Leaderboard' })).toBeVisible();
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' })).toBeVisible();
+
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeHidden();
 });
 
 test('sign-in form reports that authentication is not connected yet', async ({ page }) => {
   await page.goto('/');
+  await enterOffline(page);
+  await page.getByRole('button', { name: 'Play online' }).tap();
+  await page.getByRole('button', { name: /Quick Match/ }).tap();
   await page.getByLabel('Email address').fill('player@example.com');
   await page.locator('#auth-password').fill('valid-password-123');
   await page.locator('.auth-form').getByRole('button', { name: 'Sign in' }).click();
