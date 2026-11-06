@@ -41,7 +41,7 @@ test('first mobile launch shows splash, sign-in, onboarding, then home', async (
 
   await page.getByRole('button', { name: 'Get Started' }).tap();
   await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
-  await expect(page.getByText('Drag a block onto the board')).toBeVisible();
+  await expect(page.locator('.onboarding-tutorial-heading p')).toContainText('Drag a block onto the board');
   await expect(page.locator('.onboarding-tutorial-board .onboarding-tutorial-cell')).toHaveCount(64);
   await expect(page.locator('.onboarding-tutorial-cell.is-highlighted')).toHaveCount(3);
   await expect(page.locator('.onboarding-tutorial-piece-card')).toHaveCount(3);
