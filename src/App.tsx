@@ -293,6 +293,22 @@ export default function App() {
     void SystemBars.setStyle({ style: isGame ? SystemBarsStyle.Dark : SystemBarsStyle.Light });
   }, [mobileScreen]);
 
+  useEffect(() => {
+    if (mobileScreen !== 'onboarding') return;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousOverscroll = document.body.style.overscrollBehavior;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.body.style.overscrollBehavior = 'none';
+    window.scrollTo(0, 0);
+    return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.overscrollBehavior = previousOverscroll;
+    };
+  }, [mobileScreen]);
+
   // No automatic anonymous account is created here. Online play will require a real account after Supabase Auth is connected.
 
   useEffect(() => {
