@@ -54,8 +54,13 @@ test('first mobile launch shows splash, sign-in, onboarding, then home', async (
   await expect(page.getByRole('region', { name: 'Block Party home' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Play online' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Play Solo' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Daily Challenge' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Missions' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Pass' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Events' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
-  await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' })).toBeVisible();
+  await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Home' })).toBeVisible();
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Leaderboard' })).toBeVisible();
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' })).toBeVisible();
 
@@ -133,15 +138,33 @@ test('mobile play enters immersive gameplay and the brand returns home', async (
   await expect(page.getByRole('button', { name: 'Start a fresh game' })).toBeVisible();
 });
 
-test('daily challenge can be opened from bottom navigation and starts local gameplay', async ({ page }) => {
+test('daily challenge opens from the home action and starts local gameplay', async ({ page }) => {
   await page.goto('/');
   await completeWelcome(page);
-  await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' }).tap();
+  await page.getByRole('button', { name: 'Daily Challenge' }).tap();
   await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
   await page.getByRole('button', { name: 'Play today’s challenge' }).tap();
   await expect(page.locator('.mobile-home-screen')).toBeHidden();
   await expect(page.locator('.board-grid')).toBeVisible();
   await expect(page.locator('.score-value')).toHaveAttribute('aria-label', 'Score 0');
+});
+
+test('Home Missions, Pass and Events tiles open their matching panels', async ({ page }) => {
+  await page.goto('/');
+  await completeWelcome(page);
+
+  await page.getByRole('button', { name: 'Missions' }).tap();
+  await expect(page.getByRole('heading', { name: 'Little missions.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Close dialog' }).tap();
+
+  await page.getByRole('button', { name: 'Pass' }).tap();
+  await expect(page.getByRole('heading', { name: 'A shop, someday.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Close dialog' }).tap();
+
+  await page.getByRole('button', { name: 'Events' }).tap();
+  await expect(page.getByRole('heading', { name: 'Events are coming.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Open Daily Challenge' }).tap();
+  await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
 });
 
 test('profile contains secondary player destinations without crowding navigation', async ({ page }) => {
