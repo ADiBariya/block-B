@@ -64,6 +64,20 @@ test('upgrading an older offline install still shows the new welcome screen befo
   await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
 });
 
+test('Create an Account opens the registration form with profile fields', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Sign In to Play' })).toBeVisible();
+  await page.getByRole('button', { name: 'Create an Account' }).tap();
+  await expect(page.getByRole('heading', { name: 'Create an Account' })).toBeVisible();
+  await expect(page.getByLabel('Display name')).toBeVisible();
+  await expect(page.getByLabel('Username')).toBeVisible();
+  await expect(page.getByLabel('Email address')).toBeVisible();
+  await expect(page.locator('#auth-password')).toBeVisible();
+  await expect(page.getByLabel('Confirm password')).toBeVisible();
+  await page.getByRole('button', { name: '← Back' }).tap();
+  await expect(page.getByRole('heading', { name: 'Sign In to Play' })).toBeVisible();
+});
+
 test('sign-in form reports that authentication is not connected yet', async ({ page }) => {
   await page.goto('/');
   await completeWelcome(page);
