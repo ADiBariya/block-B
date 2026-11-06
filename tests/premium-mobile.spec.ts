@@ -8,6 +8,8 @@ async function completeWelcome(page: Page) {
   await page.getByRole('button', { name: 'Continue offline' }).tap();
   await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
   await page.getByRole('button', { name: 'Get Started' }).tap();
+  await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
+  await page.getByRole('button', { name: 'Next' }).tap();
 }
 
 test('first mobile launch shows splash, sign-in, onboarding, then home', async ({ page }) => {
@@ -38,6 +40,17 @@ test('first mobile launch shows splash, sign-in, onboarding, then home', async (
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
 
   await page.getByRole('button', { name: 'Get Started' }).tap();
+  await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
+  await expect(page.locator('.onboarding-tutorial-heading p')).toContainText('Drag a block onto the board');
+  await expect(page.locator('.onboarding-tutorial-board .onboarding-tutorial-cell')).toHaveCount(64);
+  await expect(page.locator('.onboarding-tutorial-cell.is-highlighted')).toHaveCount(3);
+  await expect(page.locator('.onboarding-tutorial-piece-card')).toHaveCount(3);
+  await expect(page.getByRole('button', { name: 'Previous onboarding screen' })).toBeVisible();
+  await page.getByRole('button', { name: 'Previous onboarding screen' }).tap();
+  await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
+  await page.getByRole('button', { name: 'Get Started' }).tap();
+  await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
+  await page.getByRole('button', { name: 'Next' }).tap();
   await expect(page.getByRole('region', { name: 'Block Party home' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Play online' })).toBeVisible();

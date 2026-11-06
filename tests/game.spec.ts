@@ -157,6 +157,8 @@ test.describe('mobile touch controls', () => {
     await page.getByRole('button', { name: 'Continue offline' }).tap();
     await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
     await page.getByRole('button', { name: 'Get Started' }).tap();
+    await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
+    await page.getByRole('button', { name: 'Next' }).tap();
     await page.getByRole('button', { name: "Let's play" }).tap();
     await page.getByRole('button', { name: 'Select block 3: 4 mint squares' }).tap();
     await page.locator('[data-cell="0"]').tap();
@@ -176,6 +178,8 @@ test.describe('mobile touch controls', () => {
     await page.getByRole('button', { name: 'Continue offline' }).tap();
     await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
     await page.getByRole('button', { name: 'Get Started' }).tap();
+    await expect(page.getByRole('heading', { name: 'Place Blocks' })).toBeVisible();
+    await page.getByRole('button', { name: 'Next' }).tap();
     await page.getByRole('button', { name: "Let's play" }).tap();
     const source = (await page.locator('.piece-button').first().boundingBox())!;
     const target = (await page.locator('[data-cell="51"]').boundingBox())!;

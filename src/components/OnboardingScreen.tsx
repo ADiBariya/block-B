@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 type OnboardingScreenProps = {
   onSkip: () => void;
   onComplete: () => void;
@@ -110,33 +112,108 @@ function BlockIllustration() {
   );
 }
 
-export default function OnboardingScreen({ onSkip, onComplete }: OnboardingScreenProps) {
+function TutorialBoard() {
+  const highlighted = new Set([34, 35, 36]);
   return (
-    <main className="onboarding-screen" aria-label="Welcome to Block Party onboarding">
+    <div className="onboarding-tutorial-board-wrap">
+      <div className="onboarding-tutorial-board" role="img" aria-label="An eight by eight puzzle board with three highlighted spaces">
+        {Array.from({ length: 64 }, (_, index) => (
+          <span key={index} className={`onboarding-tutorial-cell ${highlighted.has(index) ? 'is-highlighted' : ''}`} />
+        ))}
+        <svg className="onboarding-hand-cursor" viewBox="0 0 76 90" aria-hidden="true">
+          <defs>
+            <linearGradient id="tutorial-hand" x1="0" y1="0" x2=".85" y2="1">
+              <stop offset="0" stopColor="#fff" />
+              <stop offset=".75" stopColor="#f1edf5" />
+              <stop offset="1" stopColor="#c9bfd7" />
+            </linearGradient>
+            <filter id="tutorial-hand-shadow" x="-40%" y="-30%" width="180%" height="180%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" />
+              <feOffset dy="3" />
+              <feComponentTransfer><feFuncA type="linear" slope=".28" /></feComponentTransfer>
+              <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+          <g filter="url(#tutorial-hand-shadow)" stroke="#bcb2c7" strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round">
+            <path d="M37 82 C31 79 27 74 24 69 L11 49 C8 44 11 39 16 39 C19 39 21 41 23 44 L31 55 L26 18 C25 12 29 8 34 9 C38 10 40 13 40 18 L44 46 L45 31 C45 25 49 22 53 23 C58 24 59 28 59 33 L59 48 L62 39 C64 34 68 33 72 35 C77 38 75 43 73 48 L67 70 C64 81 55 87 44 87 Z" fill="url(#tutorial-hand)" />
+            <path d="M39 57 L35 19" fill="none" stroke="#d9d2e2" strokeWidth="2" />
+            <path d="M51 48 L53 30" fill="none" stroke="#d9d2e2" strokeWidth="2" />
+          </g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function TutorialPieces() {
+  return (
+    <div className="onboarding-tutorial-pieces" aria-label="Example block shapes">
+      <div className="onboarding-tutorial-piece-card">
+        <div className="onboarding-piece-shape onboarding-piece-purple">
+          <i /><i /><i />
+        </div>
+      </div>
+      <div className="onboarding-tutorial-piece-card">
+        <div className="onboarding-piece-shape onboarding-piece-mint">
+          <i /><i /><i />
+        </div>
+      </div>
+      <div className="onboarding-tutorial-piece-card">
+        <div className="onboarding-piece-shape onboarding-piece-coral">
+          <i /><i /><i /><i />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function OnboardingScreen({ onSkip, onComplete }: OnboardingScreenProps) {
+  const [step, setStep] = useState<1 | 2>(1);
+
+  return (
+    <main className={`onboarding-screen ${step === 2 ? 'onboarding-step-two' : 'onboarding-step-one'}`} aria-label="Block Party onboarding">
       <div className="onboarding-clouds onboarding-clouds-top" aria-hidden="true" />
       <div className="onboarding-clouds onboarding-clouds-bottom" aria-hidden="true" />
-      <div className="onboarding-content">
-        <div className="onboarding-top">
-          <button className="onboarding-skip" type="button" onClick={onSkip}>Skip</button>
+
+      {step === 1 ? (
+        <div className="onboarding-content">
+          <div className="onboarding-top">
+            <button className="onboarding-skip" type="button" onClick={onSkip}>Skip</button>
+          </div>
+          <div className="onboarding-illustration">
+            <BlockIllustration />
+          </div>
+          <section className="onboarding-copy" aria-labelledby="onboarding-title">
+            <h1 id="onboarding-title"><span>Welcome to</span><span>Block Party!</span></h1>
+            <p>A block puzzle game with online matches, leaderboards and more!</p>
+          </section>
+          <div className="onboarding-dots" aria-label="Onboarding progress: welcome screen">
+            <span className="is-active" /><span /><span />
+          </div>
+          <button className="onboarding-next" type="button" onClick={() => setStep(2)}>Get Started</button>
         </div>
-
-        <div className="onboarding-illustration">
-          <BlockIllustration />
+      ) : (
+        <div className="onboarding-tutorial-content">
+          <div className="onboarding-tutorial-top">
+            <button className="onboarding-tutorial-back" type="button" onClick={() => setStep(1)} aria-label="Back to welcome">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20" /></svg>
+            </button>
+            <span className="onboarding-tutorial-count">1/3</span>
+          </div>
+          <section className="onboarding-tutorial-heading" aria-labelledby="tutorial-title">
+            <h1 id="tutorial-title">Place Blocks</h1>
+            <p>Drag a block onto the board<br />to fill spaces.</p>
+          </section>
+          <TutorialBoard />
+          <TutorialPieces />
+          <div className="onboarding-tutorial-actions">
+            <button className="onboarding-tutorial-back-bottom" type="button" onClick={() => setStep(1)} aria-label="Previous onboarding screen">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20" /></svg>
+            </button>
+            <button className="onboarding-tutorial-next" type="button" onClick={onComplete}>Next</button>
+          </div>
         </div>
-
-        <section className="onboarding-copy" aria-labelledby="onboarding-title">
-          <h1 id="onboarding-title"><span>Welcome to</span><span>Block Party!</span></h1>
-          <p>A block puzzle game with online matches, leaderboards and more!</p>
-        </section>
-
-        <div className="onboarding-dots" aria-label="Onboarding progress: 1 of 3">
-          <span className="is-active" />
-          <span />
-          <span />
-        </div>
-
-        <button className="onboarding-next" type="button" onClick={onComplete}>Get Started</button>
-      </div>
+      )}
     </main>
   );
 }
