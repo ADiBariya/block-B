@@ -1414,7 +1414,7 @@ kbd { font-family: inherit; font-size: 9px; font-weight: 500; min-width: 16px; h
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto auto auto auto;
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
   align-items: center;
   justify-items: center;
   width: min(100%, 450px);
