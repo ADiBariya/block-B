@@ -65,7 +65,7 @@ test('first mobile launch shows splash, sign-in, onboarding, then home', async (
   await expect(page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' })).toBeVisible();
 
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
+  await expect(page.locator('.home-brand-logo')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Sign In to Play' })).toBeHidden();
 });
 test('upgrading an older offline install still shows the new welcome screen before home', async ({ page }) => {
@@ -133,7 +133,7 @@ test('mobile play enters immersive gameplay and the brand returns home', async (
   await expect(page.locator('.mobile-bottom-nav')).toBeHidden();
   await page.getByRole('button', { name: 'Pause game' }).tap();
   await page.getByRole('button', { name: 'Back to home' }).tap();
-  await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
+  await expect(page.locator('.home-brand-logo')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Keep playing' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Start a fresh game' })).toBeVisible();
 });
