@@ -285,7 +285,7 @@ export default function App() {
     if (!Capacitor.isNativePlatform()) return;
     const isGame = mobileScreen === 'game';
     void StatusBar.setStyle({ style: isGame ? Style.Light : Style.Dark });
-    void StatusBar.setBackgroundColor({ color: isGame ? '#241a35' : mobileScreen === 'auth' ? '#eee5f8' : '#f8f7f4' });
+    void StatusBar.setBackgroundColor({ color: isGame ? '#241a35' : mobileScreen === 'auth' || mobileScreen === 'onboarding' ? '#eee4f8' : '#f8f7f4' });
   }, [mobileScreen]);
 
   // No automatic anonymous account is created here. Online play will require a real account after Supabase Auth is connected.
