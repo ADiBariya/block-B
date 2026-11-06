@@ -9,7 +9,7 @@ type AuthScreenProps = {
 
 function BrandLogo() {
   return (
-    <svg className="signin-brand-art" viewBox="0 0 260 188" role="img" aria-label="Block Party">
+    <svg className="signin-brand-art" viewBox="0 0 260 214" role="img" aria-label="Block Party">
       <defs>
         <linearGradient id="signin-purple" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#d1a6ff" />
@@ -46,10 +46,10 @@ function BrandLogo() {
         </g>
       </g>
       <g fontFamily="'Arial Rounded MT Bold','Trebuchet MS','Arial Black',system-ui,sans-serif" fontWeight="1000" textAnchor="middle">
-        <text x="130" y="149" fontSize="48" letterSpacing="-2.8" textLength="216" lengthAdjust="spacingAndGlyphs" fill="#fffaff" stroke="#432d60" strokeWidth="12" strokeLinejoin="round" paintOrder="stroke fill">Block</text>
-        <text x="130" y="184" fontSize="48" letterSpacing="-2.6" textLength="181" lengthAdjust="spacingAndGlyphs" fill="#fffaff" stroke="#432d60" strokeWidth="12" strokeLinejoin="round" paintOrder="stroke fill">Party</text>
-        <text x="130" y="149" fontSize="48" letterSpacing="-2.8" textLength="216" lengthAdjust="spacingAndGlyphs" fill="#fffaff">Block</text>
-        <text x="130" y="184" fontSize="48" letterSpacing="-2.6" textLength="181" lengthAdjust="spacingAndGlyphs" fill="#fffaff">Party</text>
+        <text x="130" y="158" fontSize="53" letterSpacing="-3" textLength="216" lengthAdjust="spacingAndGlyphs" fill="#fffaff" stroke="#432d60" strokeWidth="12" strokeLinejoin="round" paintOrder="stroke fill">Block</text>
+        <text x="130" y="207" fontSize="53" letterSpacing="-3" textLength="184" lengthAdjust="spacingAndGlyphs" fill="#fffaff" stroke="#432d60" strokeWidth="12" strokeLinejoin="round" paintOrder="stroke fill">Party</text>
+        <text x="130" y="158" fontSize="53" letterSpacing="-3" textLength="216" lengthAdjust="spacingAndGlyphs" fill="#fffaff">Block</text>
+        <text x="130" y="207" fontSize="53" letterSpacing="-3" textLength="184" lengthAdjust="spacingAndGlyphs" fill="#fffaff">Party</text>
       </g>
     </svg>
   );
