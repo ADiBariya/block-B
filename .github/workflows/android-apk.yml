@@ -68,15 +68,18 @@ jobs:
         run: npx cap sync android
 
       - name: Build debug APK
+        if: github.event_name == 'workflow_dispatch'
         working-directory: android
         run: bash ./gradlew --no-daemon --stacktrace assembleDebug
 
       - name: Verify APK
+        if: github.event_name == 'workflow_dispatch'
         run: |
           test -s android/app/build/outputs/apk/debug/app-debug.apk
           ls -lh android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload debug APK
+        if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: block-party-debug-apk
