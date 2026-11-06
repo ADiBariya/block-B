@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, SystemBars, SystemBarsStyle } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
-import { StatusBar, Style } from '@capacitor/status-bar';
 import { ensureAnonymousIdentity, supabaseConfigured } from './services/supabase';
 import { loadGlobalPage, renameGlobalPlayer, searchGlobalPlayers, submitRankedScore, subscribeToGlobalScores } from './services/leaderboardApi';
 import { appendUniqueEntries, EventDeduper, nextCursor, validateUsername, type RankEntry, type ScoreNotice } from './game/leaderboard';
@@ -193,11 +192,16 @@ export default function App() {
   const [cosmetics, setCosmetics] = useState<CosmeticChoice>(() => readStored(COSMETICS_KEY, { theme: 'cream', skin: 'classic' }));
   const [dialog, setDialog] = useState<DialogKind>(null);
   const [mobileScreen, setMobileScreen] = useState<'auth' | 'onboarding' | 'home' | 'game'>(() => {
+    const isMobileClient = Capacitor.isNativePlatform() || window.matchMedia('(max-width: 740px)').matches;
+    if (!isMobileClient) return 'home';
     try {
-      if (!window.matchMedia('(max-width: 740px)').matches) return 'home';
-      if (localStorage.getItem('blockparty.entry.v1') !== 'offline') return 'auth';
-      return localStorage.getItem('blockparty.onboarding.v1') === 'complete' ? 'home' : 'onboarding';
-    } catch { return 'home'; }
+      // Show the new approved welcome screen once, including to players upgrading
+      // from the earlier onboarding flow which used a different completion key.
+      if (localStorage.getItem('blockparty.onboarding.welcome.v1') !== 'complete') return 'onboarding';
+      return localStorage.getItem('blockparty.entry.v1') === 'offline' ? 'home' : 'auth';
+    } catch {
+      return 'onboarding';
+    }
   });
   const [authNotice, setAuthNotice] = useState('');
   const [selected, setSelected] = useState<number | null>(0);
@@ -284,8 +288,25 @@ export default function App() {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     const isGame = mobileScreen === 'game';
-    void StatusBar.setStyle({ style: isGame ? Style.Light : Style.Dark });
-    void StatusBar.setBackgroundColor({ color: isGame ? '#241a35' : mobileScreen === 'auth' || mobileScreen === 'onboarding' ? '#eee4f8' : '#f8f7f4' });
+    // Capacitor 8 SystemBars works with Android's enforced edge-to-edge layout.
+    // Dark icons are used on the light onboarding/home surfaces; the game uses light icons.
+    void SystemBars.setStyle({ style: isGame ? SystemBarsStyle.Dark : SystemBarsStyle.Light });
+  }, [mobileScreen]);
+
+  useEffect(() => {
+    if (mobileScreen !== 'onboarding') return;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousOverscroll = document.body.style.overscrollBehavior;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.body.style.overscrollBehavior = 'none';
+    window.scrollTo(0, 0);
+    return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.overscrollBehavior = previousOverscroll;
+    };
   }, [mobileScreen]);
 
   // No automatic anonymous account is created here. Online play will require a real account after Supabase Auth is connected.
@@ -658,13 +679,15 @@ export default function App() {
   function enterOfflinePlay() {
     try { localStorage.setItem('blockparty.entry.v1', 'offline'); } catch { /* Offline play remains available for this session. */ }
     setAuthNotice('');
-    try {
-      setMobileScreen(localStorage.getItem('blockparty.onboarding.v1') === 'complete' ? 'home' : 'onboarding');
-    } catch { setMobileScreen('home'); }
+    setMobileScreen('home');
   }
 
   function finishOnboarding() {
-    try { localStorage.setItem('blockparty.onboarding.v1', 'complete'); } catch { /* The tutorial can still be skipped for this session. */ }
+    try {
+      localStorage.setItem('blockparty.onboarding.welcome.v1', 'complete');
+      localStorage.setItem('blockparty.onboarding.v1', 'complete');
+      localStorage.setItem('blockparty.entry.v1', 'offline');
+    } catch { /* Home remains available for this session even if storage is unavailable. */ }
     setMobileScreen('home');
   }
 
