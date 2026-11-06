@@ -45,22 +45,22 @@ export default function SplashScreen() {
           </defs>
 
           <g className="splash-logo-blocks" filter="url(#splash-block-shadow)">
-            <g transform="translate(148 12)">
-              <rect width="65" height="65" rx="19" fill="url(#splash-purple)" stroke="#463064" strokeWidth="7" />
-              <path d="M13 8 Q32 -1 51 8" fill="none" stroke="#fff" strokeOpacity=".66" strokeWidth="5" strokeLinecap="round" />
-              <path d="M8 23 Q4 33 9 44" fill="none" stroke="#fff" strokeOpacity=".28" strokeWidth="4" strokeLinecap="round" />
+            <g transform="translate(142 8)">
+              <rect width="76" height="76" rx="21" fill="url(#splash-purple)" stroke="#463064" strokeWidth="7" />
+              <path d="M15 9 Q38 -1 61 9" fill="none" stroke="#fff" strokeOpacity=".66" strokeWidth="5" strokeLinecap="round" />
+              <path d="M9 26 Q4 39 10 54" fill="none" stroke="#fff" strokeOpacity=".28" strokeWidth="4" strokeLinecap="round" />
             </g>
-            <g transform="translate(92 70)">
-              <rect width="65" height="65" rx="18" fill="url(#splash-purple)" stroke="#463064" strokeWidth="7" />
-              <path d="M12 8 Q30 1 50 8" fill="none" stroke="#fff" strokeOpacity=".58" strokeWidth="5" strokeLinecap="round" />
+            <g transform="translate(56 76)">
+              <rect width="76" height="76" rx="21" fill="url(#splash-purple)" stroke="#463064" strokeWidth="7" />
+              <path d="M15 9 Q38 1 61 9" fill="none" stroke="#fff" strokeOpacity=".58" strokeWidth="5" strokeLinecap="round" />
             </g>
-            <g transform="translate(148 70)">
-              <rect width="65" height="65" rx="16" fill="url(#splash-orange)" stroke="#463064" strokeWidth="7" />
-              <path d="M12 8 Q30 1 50 8" fill="none" stroke="#fff" strokeOpacity=".58" strokeWidth="5" strokeLinecap="round" />
+            <g transform="translate(142 76)">
+              <rect width="76" height="76" rx="20" fill="url(#splash-orange)" stroke="#463064" strokeWidth="7" />
+              <path d="M15 9 Q38 1 61 9" fill="none" stroke="#fff" strokeOpacity=".58" strokeWidth="5" strokeLinecap="round" />
             </g>
-            <g transform="translate(204 70)">
-              <rect width="65" height="65" rx="17" fill="url(#splash-blue)" stroke="#463064" strokeWidth="7" />
-              <path d="M12 8 Q30 1 50 8" fill="none" stroke="#fff" strokeOpacity=".66" strokeWidth="5" strokeLinecap="round" />
+            <g transform="translate(228 76)">
+              <rect width="76" height="76" rx="20" fill="url(#splash-blue)" stroke="#463064" strokeWidth="7" />
+              <path d="M15 9 Q38 1 61 9" fill="none" stroke="#fff" strokeOpacity=".66" strokeWidth="5" strokeLinecap="round" />
             </g>
           </g>
 
