@@ -26,7 +26,7 @@ test('capture the new auth, home, gameplay and profile screens for visual review
   await page.waitForTimeout(180);
   await capture('onboarding-place-blocks-2.png');
   await page.getByRole('button', { name: 'Next' }).click();
-  await expect(page.getByRole('heading', { name: 'Block Party' })).toBeVisible();
+  await expect(page.locator('.home-brand-logo')).toBeVisible();
   await page.waitForTimeout(350);
   await capture('home-hub.png');
 
@@ -37,7 +37,7 @@ test('capture the new auth, home, gameplay and profile screens for visual review
   await page.getByRole('button', { name: 'Pause game' }).click();
   await page.getByRole('button', { name: 'Back to home' }).click();
 
-  await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' }).click();
+  await page.getByRole('button', { name: 'Daily Challenge' }).click();
   await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
   await page.waitForTimeout(180);
   await capture('daily-challenge.png');
