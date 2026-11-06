@@ -152,8 +152,7 @@ test.describe('mobile touch controls', () => {
 
   test('tap selection and placement work on a touch screen', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Play solo offline' }).tap();
-    await page.getByRole('button', { name: 'Skip' }).tap();
+    await page.getByRole('button', { name: 'Get Started' }).tap();
     await page.getByRole('button', { name: "Let's play" }).tap();
     await page.getByRole('button', { name: 'Select block 3: 4 mint squares' }).tap();
     await page.locator('[data-cell="0"]').tap();
@@ -168,8 +167,7 @@ test.describe('mobile touch controls', () => {
 
   test('real touch dragging lifts the block above the finger and places it', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Play solo offline' }).tap();
-    await page.getByRole('button', { name: 'Skip' }).tap();
+    await page.getByRole('button', { name: 'Get Started' }).tap();
     await page.getByRole('button', { name: "Let's play" }).tap();
     const source = (await page.locator('.piece-button').first().boundingBox())!;
     const target = (await page.locator('[data-cell="51"]').boundingBox())!;
