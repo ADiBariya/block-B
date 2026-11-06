@@ -193,11 +193,16 @@ export default function App() {
   const [cosmetics, setCosmetics] = useState<CosmeticChoice>(() => readStored(COSMETICS_KEY, { theme: 'cream', skin: 'classic' }));
   const [dialog, setDialog] = useState<DialogKind>(null);
   const [mobileScreen, setMobileScreen] = useState<'auth' | 'onboarding' | 'home' | 'game'>(() => {
+    const isMobileClient = Capacitor.isNativePlatform() || window.matchMedia('(max-width: 740px)').matches;
+    if (!isMobileClient) return 'home';
     try {
-      if (!window.matchMedia('(max-width: 740px)').matches) return 'home';
-      if (localStorage.getItem('blockparty.entry.v1') !== 'offline') return 'auth';
-      return localStorage.getItem('blockparty.onboarding.v1') === 'complete' ? 'home' : 'onboarding';
-    } catch { return 'home'; }
+      // Show the new approved welcome screen once, including to players upgrading
+      // from the earlier onboarding flow which used a different completion key.
+      if (localStorage.getItem('blockparty.onboarding.welcome.v1') !== 'complete') return 'onboarding';
+      return localStorage.getItem('blockparty.entry.v1') === 'offline' ? 'home' : 'auth';
+    } catch {
+      return 'onboarding';
+    }
   });
   const [authNotice, setAuthNotice] = useState('');
   const [selected, setSelected] = useState<number | null>(0);
@@ -658,13 +663,15 @@ export default function App() {
   function enterOfflinePlay() {
     try { localStorage.setItem('blockparty.entry.v1', 'offline'); } catch { /* Offline play remains available for this session. */ }
     setAuthNotice('');
-    try {
-      setMobileScreen(localStorage.getItem('blockparty.onboarding.v1') === 'complete' ? 'home' : 'onboarding');
-    } catch { setMobileScreen('home'); }
+    setMobileScreen('home');
   }
 
   function finishOnboarding() {
-    try { localStorage.setItem('blockparty.onboarding.v1', 'complete'); } catch { /* The tutorial can still be skipped for this session. */ }
+    try {
+      localStorage.setItem('blockparty.onboarding.welcome.v1', 'complete');
+      localStorage.setItem('blockparty.onboarding.v1', 'complete');
+      localStorage.setItem('blockparty.entry.v1', 'offline');
+    } catch { /* Home remains available for this session even if storage is unavailable. */ }
     setMobileScreen('home');
   }
 
