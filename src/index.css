@@ -2540,7 +2540,7 @@ body:has(.site-shell.screen-auth) #root {
     position: relative;
     isolation: isolate;
     display: grid !important;
-    grid-template-rows: auto minmax(122px, 1fr) auto auto;
+    grid-template-rows: auto clamp(112px, 28svh, 224px) auto auto 1fr;
     align-content: stretch;
     align-items: center;
     gap: clamp(6px, 1.05svh, 10px);
