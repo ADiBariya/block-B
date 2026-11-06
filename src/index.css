@@ -1669,6 +1669,8 @@ body:has(.site-shell.screen-onboarding) #root {
 
 
 /* Branded first-launch splash — recreated from the approved Block Party reference */
+.splash-screen { display: none; }
+.site-shell.screen-splash .splash-screen { display: block; }
 .site-shell.screen-splash {
   position: fixed;
   inset: 0;
