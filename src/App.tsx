@@ -295,12 +295,12 @@ export default function App() {
 
   useEffect(() => {
     if (mobileScreen !== 'splash') return;
-    const splashTimer = window.setTimeout(() => setMobileScreen('onboarding'), 2150);
+    const splashTimer = window.setTimeout(() => setMobileScreen('auth'), 2150);
     return () => window.clearTimeout(splashTimer);
   }, [mobileScreen]);
 
   useEffect(() => {
-    if (mobileScreen !== 'onboarding' && mobileScreen !== 'splash') return;
+    if (mobileScreen !== 'onboarding' && mobileScreen !== 'splash' && mobileScreen !== 'auth') return;
     const previousHtmlOverflow = document.documentElement.style.overflow;
     const previousBodyOverflow = document.body.style.overflow;
     const previousOverscroll = document.body.style.overscrollBehavior;
@@ -685,7 +685,12 @@ export default function App() {
   function enterOfflinePlay() {
     try { localStorage.setItem('blockparty.entry.v1', 'offline'); } catch { /* Offline play remains available for this session. */ }
     setAuthNotice('');
-    setMobileScreen('home');
+    try {
+      const welcomeComplete = localStorage.getItem('blockparty.onboarding.welcome.v1') === 'complete';
+      setMobileScreen(welcomeComplete ? 'home' : 'onboarding');
+    } catch {
+      setMobileScreen('onboarding');
+    }
   }
 
   function finishOnboarding() {

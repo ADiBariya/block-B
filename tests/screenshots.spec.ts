@@ -14,6 +14,10 @@ test('capture the new auth, home, gameplay and profile screens for visual review
   await expect(page.locator('.splash-screen')).toBeVisible();
   await page.waitForTimeout(180);
   await capture('splash-screen.png');
+  await expect(page.getByRole('heading', { name: 'Sign In to Play' })).toBeVisible();
+  await page.waitForTimeout(180);
+  await capture('signin-register.png');
+  await page.getByRole('button', { name: 'Continue offline' }).click();
   await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
   await page.waitForTimeout(180);
   await capture('onboarding-welcome-screen-1.png');
