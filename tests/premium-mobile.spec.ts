@@ -3,12 +3,18 @@ import { expect, test, type Page } from '@playwright/test';
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
 
 async function completeWelcome(page: Page) {
+  await expect(page.locator('.splash-screen')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
   await page.getByRole('button', { name: 'Get Started' }).tap();
 }
 
 test('first mobile launch shows onboarding before home or sign in', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('.splash-screen')).toBeVisible();
+  await expect(page.locator('.mobile-home-screen')).toBeHidden();
+  await expect(page.locator('.onboarding-screen')).toBeHidden();
   await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
+  await expect(page.locator('.splash-screen')).toBeHidden();
   await expect(page.locator('.onboarding-block-art')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Skip' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Get Started' })).toBeVisible();
@@ -47,6 +53,7 @@ test('upgrading an older offline install still shows the new welcome screen befo
     localStorage.setItem('blockparty.onboarding.welcome.v1', 'incomplete');
   });
   await page.goto('/');
+  await expect(page.locator('.splash-screen')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
   await expect(page.locator('.mobile-home-screen')).toBeHidden();
 });
