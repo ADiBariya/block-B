@@ -134,8 +134,7 @@ test('mobile play enters immersive gameplay and the brand returns home', async (
   await page.getByRole('button', { name: 'Pause game' }).tap();
   await page.getByRole('button', { name: 'Back to home' }).tap();
   await expect(page.locator('.home-brand-logo')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Keep playing' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Start a fresh game' })).toBeVisible();
+  await expect(page.locator('.home-action-solo')).toContainText('Continue');
 });
 
 test('daily challenge opens from the home action and starts local gameplay', async ({ page }) => {
