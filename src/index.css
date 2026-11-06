@@ -2221,3 +2221,25 @@ body:has(.site-shell.screen-auth) #root {
 @media (prefers-reduced-motion: reduce) {
   .signin-provider-button { transition: none; }
 }
+
+
+@media (max-height: 720px) {
+  .signin-content { grid-template-rows: minmax(98px, 26%) minmax(0, 1fr); }
+  .signin-brand-art { width: min(64vw, 205px); max-height: 22svh; }
+  .signin-panel { padding: 9px 14px 6px; border-radius: 19px; }
+  .signin-panel h1 { font-size: 18px; }
+  .signin-intro { margin: 5px auto 7px; font-size: 9px; }
+  .signin-provider-stack { gap: 5px; }
+  .signin-provider-button { min-height: clamp(32px, 5svh, 38px); border-radius: 12px; font-size: 9px; }
+  .signin-divider { margin: 6px 0 5px; font-size: 9px; }
+  .signin-create-link { font-size: 10px; }
+  .signin-legal { margin-top: 6px; font-size: 7px; }
+  .signin-offline-link { padding-top: 3px; font-size: 7px; }
+}
+@media (max-width: 360px) {
+  .signin-brand-art { width: min(68vw, 225px); }
+  .signin-panel { padding-left: 13px; padding-right: 13px; }
+  .signin-provider-button { grid-template-columns: 23px minmax(0, 1fr) 23px; padding-left: 9px; padding-right: 9px; }
+  .signin-panel h1 { font-size: 18px; }
+  .signin-intro { font-size: 9px; }
+}
