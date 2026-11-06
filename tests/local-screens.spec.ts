@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('home opens the daily challenge as an offline local seeded round', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Daily challenge' }).click();
+  await page.getByRole('button', { name: 'Daily Challenge' }).click();
   await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
   await expect(page.getByRole('dialog')).toContainText('not sent to global rankings');
   await page.getByRole('button', { name: 'Play today’s challenge' }).click();
