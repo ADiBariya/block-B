@@ -55,7 +55,7 @@ test('settings persist sound, haptic and motion preferences', async ({ page }) =
 test('online leaderboard requires a real signed-in account', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Global', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Sign In to Play' })).toBeVisible();
   await expect(page.locator('.auth-notice')).toContainText('Sign in or create an account');
   await expect(page.locator('.global-rank-row')).toHaveCount(0);
 });
