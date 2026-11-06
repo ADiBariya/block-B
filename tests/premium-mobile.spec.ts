@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
 
-async function enterOffline(page: Page) {
+async function completeWelcome(page: Page) {
   await page.getByRole('button', { name: 'Get Started' }).tap();
 }
 
@@ -16,6 +16,15 @@ test('first mobile launch shows onboarding before home or sign in', async ({ pag
   await expect(page.locator('.onboarding-dots span.is-active')).toHaveCount(1);
   await expect(page.locator('.mobile-home-screen')).toBeHidden();
   await expect(page.locator('.auth-screen')).toBeHidden();
+  const viewport = await page.evaluate(() => ({
+    height: window.innerHeight,
+    documentHeight: document.documentElement.scrollHeight,
+    buttonBottom: document.querySelector('.onboarding-next')!.getBoundingClientRect().bottom,
+  }));
+  expect(viewport.documentHeight).toBeLessThanOrEqual(viewport.height + 1);
+  expect(viewport.buttonBottom).toBeLessThanOrEqual(viewport.height);
+  await page.mouse.wheel(0, 400);
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
 
   await page.getByRole('button', { name: 'Get Started' }).tap();
   await expect(page.getByRole('region', { name: 'Block Party home' })).toBeVisible();
@@ -31,9 +40,20 @@ test('first mobile launch shows onboarding before home or sign in', async ({ pag
   await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeHidden();
 });
 
+test('upgrading an older offline install still shows the new welcome screen before home', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('blockparty.entry.v1', 'offline');
+    localStorage.setItem('blockparty.onboarding.v1', 'complete');
+    localStorage.setItem('blockparty.onboarding.welcome.v1', 'incomplete');
+  });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Welcome to Block Party!' })).toBeVisible();
+  await expect(page.locator('.mobile-home-screen')).toBeHidden();
+});
+
 test('sign-in form reports that authentication is not connected yet', async ({ page }) => {
   await page.goto('/');
-  await enterOffline(page);
+  await completeWelcome(page);
   await page.getByRole('button', { name: 'Play online' }).tap();
   await page.getByRole('button', { name: /Quick Match/ }).tap();
   await page.getByLabel('Email address').fill('player@example.com');
@@ -44,7 +64,7 @@ test('sign-in form reports that authentication is not connected yet', async ({ p
 
 test('online mode options require a real account before entering matchmaking', async ({ page }) => {
   await page.goto('/');
-  await enterOffline(page);
+  await completeWelcome(page);
   await page.getByRole('button', { name: 'Play online' }).tap();
   await expect(page.getByRole('heading', { name: 'Play online.' })).toBeVisible();
   await expect(page.getByRole('button', { name: /Quick Match/ })).toBeVisible();
@@ -57,7 +77,7 @@ test('online mode options require a real account before entering matchmaking', a
 
 test('mobile play enters immersive gameplay and the brand returns home', async ({ page }) => {
   await page.goto('/');
-  await enterOffline(page);
+  await completeWelcome(page);
   await page.getByRole('button', { name: "Let's play" }).tap();
   await expect(page.locator('.mobile-home-screen')).toBeHidden();
   await expect(page.locator('.board-grid')).toBeVisible();
@@ -73,7 +93,7 @@ test('mobile play enters immersive gameplay and the brand returns home', async (
 
 test('daily challenge can be opened from bottom navigation and starts local gameplay', async ({ page }) => {
   await page.goto('/');
-  await enterOffline(page);
+  await completeWelcome(page);
   await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Daily' }).tap();
   await expect(page.getByRole('heading', { name: 'A fresh little puzzle.' })).toBeVisible();
   await page.getByRole('button', { name: 'Play today’s challenge' }).tap();
@@ -84,7 +104,7 @@ test('daily challenge can be opened from bottom navigation and starts local game
 
 test('profile contains secondary player destinations without crowding navigation', async ({ page }) => {
   await page.goto('/');
-  await enterOffline(page);
+  await completeWelcome(page);
   await page.locator('.mobile-bottom-nav').getByRole('button', { name: 'Profile' }).tap();
   await expect(page.getByRole('heading', { name: 'A little about you.' })).toBeVisible();
   const shortcuts = page.locator('.profile-shortcuts');
