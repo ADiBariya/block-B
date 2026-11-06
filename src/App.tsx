@@ -19,7 +19,7 @@ import SplashScreen from './components/SplashScreen';
 
 type IconName = 'play' | 'pause' | 'restart' | 'sound' | 'muted' | 'trophy' | 'arrow' | 'close' | 'help' | 'rotate' | 'mouse' | 'sparkle' | 'check' | 'lock' | 'keyboard' | 'calendar' | 'user';
 type Status = 'ready' | 'playing' | 'paused' | 'over';
-type DialogKind = 'help' | 'scores' | 'global' | 'daily' | 'online' | 'profile' | 'statistics' | 'collection' | 'shop' | 'settings' | null;
+type DialogKind = 'help' | 'scores' | 'global' | 'daily' | 'online' | 'missions' | 'events' | 'profile' | 'statistics' | 'collection' | 'shop' | 'settings' | null;
 type LocalStats = { gamesPlayed: number; totalScore: number; totalLines: number; bestCombo: number };
 type CosmeticChoice = { theme: 'cream' | 'lavender' | 'mint'; skin: 'classic' | 'gloss' | 'outline' };
 const STATS_KEY = 'blockparty.stats.v1';
@@ -73,6 +73,118 @@ function saveRankedCheckpoint(value: RankedCheckpoint | null) {
     if (value) localStorage.setItem(RANKED_CHECKPOINT_KEY, JSON.stringify(value));
     else localStorage.removeItem(RANKED_CHECKPOINT_KEY);
   } catch { /* Ranked submission can still proceed from memory. */ }
+}
+
+function HomeAvatar() {
+  return (
+    <svg className="home-avatar-art" viewBox="0 0 48 48" role="img" aria-label="Player avatar">
+      <defs>
+        <clipPath id="home-avatar-clip"><circle cx="24" cy="24" r="23" /></clipPath>
+        <linearGradient id="home-avatar-bg" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#b9e4eb" /><stop offset="1" stopColor="#9a8bd0" /></linearGradient>
+      </defs>
+      <g clipPath="url(#home-avatar-clip)">
+        <rect width="48" height="48" fill="url(#home-avatar-bg)" />
+        <path d="M2 48 Q5 33 24 32 Q43 33 46 48" fill="#5d4b88" />
+        <path d="M10 22 Q9 5 24 5 Q40 5 38 24 L35 31 L13 31Z" fill="#34264f" />
+        <ellipse cx="24" cy="22" rx="12" ry="14" fill="#f1c29f" />
+        <path d="M12 20 Q13 6 25 7 Q37 7 37 19 Q31 13 24 14 Q18 15 12 20Z" fill="#302344" />
+        <path d="M14 20 Q17 14 23 14" fill="none" stroke="#4a345c" strokeWidth="3" strokeLinecap="round" />
+        <circle cx="20" cy="23" r="1.2" fill="#34233e" /><circle cx="29" cy="23" r="1.2" fill="#34233e" />
+        <path d="M21 29 Q24 31 28 28" fill="none" stroke="#b16d6b" strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M17 36 L24 42 L31 36 L34 48 L14 48Z" fill="#8d7bc1" />
+        <path d="M11 18 Q9 9 19 5 Q31 1 38 12 Q30 8 24 11 Q17 12 11 18Z" fill="#302344" />
+      </g>
+      <circle cx="24" cy="24" r="22.5" fill="none" stroke="#fff" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function HomeBrandLogo() {
+  return (
+    <svg className="home-brand-logo" viewBox="0 0 240 238" role="img" aria-label="Block Party">
+      <defs>
+        <linearGradient id="home-logo-purple" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#d6b0ff" /><stop offset=".52" stopColor="#a56ce5" /><stop offset="1" stopColor="#7547be" /></linearGradient>
+        <linearGradient id="home-logo-orange" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#ffe58b" /><stop offset=".55" stopColor="#ffb832" /><stop offset="1" stopColor="#e98a25" /></linearGradient>
+        <linearGradient id="home-logo-blue" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#b6eef5" /><stop offset=".55" stopColor="#68cce0" /><stop offset="1" stopColor="#359ebc" /></linearGradient>
+        <filter id="home-logo-shadow" x="-30%" y="-30%" width="160%" height="180%"><feGaussianBlur in="SourceAlpha" stdDeviation="3" /><feOffset dy="4" /><feComponentTransfer><feFuncA type="linear" slope=".32" /></feComponentTransfer><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+      </defs>
+      <g filter="url(#home-logo-shadow)" stroke="#3d2859" strokeWidth="5" strokeLinejoin="round">
+        <rect x="92" y="4" width="56" height="56" rx="16" fill="url(#home-logo-purple)" />
+        <rect x="45" y="49" width="56" height="56" rx="15" fill="url(#home-logo-purple)" />
+        <rect x="92" y="49" width="56" height="56" rx="14" fill="url(#home-logo-orange)" />
+        <rect x="139" y="49" width="56" height="56" rx="15" fill="url(#home-logo-blue)" />
+        <g fill="none" stroke="#fff" strokeOpacity=".7" strokeWidth="3.2" strokeLinecap="round">
+          <path d="M104 12 Q120 5 136 12" /><path d="M56 57 Q72 50 88 57" /><path d="M103 57 Q119 50 135 57" /><path d="M150 57 Q166 50 182 57" />
+        </g>
+      </g>
+      <g fontFamily="'Arial Rounded MT Bold','Trebuchet MS','Arial Black',system-ui,sans-serif" fontWeight="1000" textAnchor="middle">
+        <text x="120" y="157" fontSize="62" letterSpacing="-3.6" textLength="220" lengthAdjust="spacingAndGlyphs" fill="#fffaff" stroke="#3d2859" strokeWidth="12" strokeLinejoin="round" paintOrder="stroke fill">Block</text>
+        <text x="120" y="215" fontSize="62" letterSpacing="-3.4" textLength="184" lengthAdjust="spacingAndGlyphs" fill="#fffaff" stroke="#3d2859" strokeWidth="12" strokeLinejoin="round" paintOrder="stroke fill">Party</text>
+        <text x="120" y="157" fontSize="62" letterSpacing="-3.6" textLength="220" lengthAdjust="spacingAndGlyphs" fill="#fffaff">Block</text>
+        <text x="120" y="215" fontSize="62" letterSpacing="-3.4" textLength="184" lengthAdjust="spacingAndGlyphs" fill="#fffaff">Party</text>
+      </g>
+    </svg>
+  );
+}
+
+function HomeActionIcon({ kind }: { kind: 'online' | 'solo' | 'daily' }) {
+  if (kind === 'online') return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <g fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M7 5 L25 25 M5 7 L25 27 M7 5 L11 4 L28 21 L25 25 L7 7Z" />
+        <path d="M25 5 L7 25 M27 7 L7 27 M25 5 L21 4 L4 21 L7 25 L25 7Z" />
+        <path d="M3 14 L10 7 M22 25 L29 18 M22 7 L29 14 M3 18 L10 25" />
+      </g>
+    </svg>
+  );
+  if (kind === 'solo') return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M10 10 H22 C25 10 27 12 28 16 L29 21 C29.5 25 26 27 23 24 L19.5 21 H12.5 L9 24 C6 27 2.5 25 3 21 L4 16 C5 12 7 10 10 10Z" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinejoin="round" />
+      <path d="M10 14 V20 M7 17 H13" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="21.5" cy="16" r="1.4" fill="currentColor" /><circle cx="24.5" cy="19.5" r="1.4" fill="currentColor" />
+    </svg>
+  );
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <rect x="5" y="7" width="22" height="21" rx="3.5" fill="none" stroke="currentColor" strokeWidth="2.3" />
+      <path d="M10 4 V10 M22 4 V10 M5 13 H27" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" />
+      <path d="M11 18 H21 M16 15 V24 M12 22 L16 26 L20 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function HomeTileIcon({ kind }: { kind: 'missions' | 'pass' | 'events' }) {
+  if (kind === 'missions') return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M10 4 H22 L27 9 V23 L16 29 L5 23 V9Z" fill="#b79be9" stroke="#7654b8" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M11 10 H21 V20 H11Z" fill="#f7f1ff" stroke="#7654b8" strokeWidth="1.3" />
+      <path d="M13 15 L15.2 17.3 L19.5 12.8" fill="none" stroke="#7654b8" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+  if (kind === 'pass') return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M4 9 L10 12 L15 5 L20 12 L28 8 L26 22 H6Z" fill="#ffc34f" stroke="#d88e29" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M6 23 H26 V27 H6Z" fill="#e89b35" stroke="#d88e29" strokeWidth="1.5" />
+      <circle cx="10" cy="9" r="2" fill="#fff0a5" /><circle cx="15" cy="5" r="2" fill="#fff0a5" /><circle cx="27" cy="8" r="2" fill="#fff0a5" />
+    </svg>
+  );
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 27 C10 23 5 19 5 12 C5 6 12 4 16 10 C20 4 27 6 27 12 C27 19 22 23 16 27Z" fill="#f2a59d" stroke="#c76f73" strokeWidth="1.7" />
+      <path d="M11 13 Q13 10 15 13 M18 13 Q20 10 22 13" fill="none" stroke="#a95461" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M13 18 Q16 21 19 18" fill="none" stroke="#a95461" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function HomeCoinIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.5" fill="#ffc83e" stroke="#e99c22" strokeWidth="1.2" />
+      <circle cx="12" cy="12" r="6.6" fill="none" stroke="#fff0a2" strokeWidth="1.2" />
+      <path d="M12 7.2 V16.8 M14.7 9.1 C13.5 7.8 9.4 7.8 9.4 10.2 C9.4 12.5 14.7 11.4 14.7 13.8 C14.7 16.1 10.2 16.4 8.8 14.5" fill="none" stroke="#a76b1e" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
 }
 
 function Icon({ name, size = 20, className = '' }: { name: IconName; size?: number; className?: string }) {
@@ -1076,7 +1188,7 @@ export default function App() {
   const showStarterHint = game.moves === 0 && selected === 0 && !!activePiece && pieceSize(activePiece).rows === 1;
 
   return (
-    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin} ${mobileScreen === 'splash' ? 'screen-splash' : ''} ${mobileScreen === 'auth' ? 'screen-auth' : ''} ${mobileScreen === 'onboarding' ? 'screen-onboarding' : ''} ${mobileScreen === 'game' ? 'screen-game' : ''}`}>
+    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin} ${mobileScreen === 'home' ? 'screen-home' : ''} ${mobileScreen === 'splash' ? 'screen-splash' : ''} ${mobileScreen === 'auth' ? 'screen-auth' : ''} ${mobileScreen === 'onboarding' ? 'screen-onboarding' : ''} ${mobileScreen === 'game' ? 'screen-game' : ''}`}>
       <SplashScreen />
       <AuthScreen notice={authNotice} onPlayOffline={enterOfflinePlay} />
       <OnboardingScreen onSkip={finishOnboarding} onComplete={finishOnboarding} />
@@ -1103,78 +1215,73 @@ export default function App() {
 
       <main id="game" className={`play-layout ${mobileScreen === 'home' ? 'mobile-hub-active' : ''}`}>
         <section className="mobile-home-screen" aria-label="Block Party home">
-          <div className="mobile-home-heading">
-            <div>
-              <span className="mobile-home-eyebrow"><span />A LITTLE BREAK, WELL SPENT</span>
-              <h1>Block Party</h1>
-              <p>Match · Clear · Compete</p>
-            </div>
-            <button className="mobile-home-profile" onClick={() => openDialog('profile')} aria-label="Open profile">
-              <Icon name="user" size={21} />
+          <div className="home-sky-decor" aria-hidden="true">
+            <span className="home-cloud home-cloud-left" />
+            <span className="home-cloud home-cloud-right" />
+            <span className="home-floating-block home-floating-block-left" />
+            <span className="home-floating-block home-floating-block-right" />
+            <span className="home-sparkle home-sparkle-left">✦</span>
+            <span className="home-sparkle home-sparkle-right">✦</span>
+          </div>
+
+          <div className="home-topbar">
+            <button className="home-player" onClick={() => openDialog('profile')} aria-label="Open ADI profile">
+              <span className="home-avatar"><HomeAvatar /></span>
+              <span className="home-player-details">
+                <strong>ADI</strong>
+                <small>Lv. 12</small>
+                <span className="home-level-track"><i /></span>
+              </span>
+            </button>
+            <button className="home-wallet" onClick={() => openDialog('shop')} aria-label="Open coin shop">
+              <HomeCoinIcon />
+              <strong>1,240</strong>
+              <span className="home-wallet-add" aria-hidden="true">+</span>
             </button>
           </div>
 
-          <section className="mobile-home-hero" aria-label="Start playing">
-            <div className="mobile-home-hero-copy">
-              <span className="mobile-home-hero-kicker">CLASSIC MODE</span>
-              <h2>{status === 'over' ? 'Ready for another round?' : mobileCanContinue ? 'Continue your game.' : 'Make your next move.'}</h2>
-              <p>{status === 'over' ? 'A fresh board is ready when you are.' : mobileCanContinue ? 'Your solo round is saved on this device.' : 'Place blocks, clear lines and build combos.'}</p>
-            </div>
-            <div className="mobile-home-art" aria-hidden="true">
-              <span className="mobile-home-art-sparkle">✦</span>
-              <div className="mobile-home-art-grid">
-                {Array.from({ length: 16 }, (_, index) => (
-                  <i
-                    key={index}
-                    className={`mobile-home-art-cell ${[1, 4, 5, 6, 9, 10, 13].includes(index) ? 'is-filled' : ''} ${[1, 6, 9].includes(index) ? 'is-lavender' : ''} ${[4, 13].includes(index) ? 'is-coral' : ''} ${[5, 10].includes(index) ? 'is-mint' : ''}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
+          <div className="home-brand-stage" aria-label="Block Party">
+            <HomeBrandLogo />
+          </div>
 
-          <section className="mobile-home-modes" aria-label="Game modes">
-            <button className="mobile-home-online" aria-label="Play online" onClick={() => openDialog('online')}>
-              <Icon name="trophy" size={19} />
-              <span className="mobile-mode-copy"><strong>Play Online</strong><small>Quick match · Ranked · Friends</small></span>
-              <Icon name="arrow" size={18} />
+          <section className="home-action-stack" aria-label="Play modes">
+            <button className="home-action home-action-online" aria-label="Play online" onClick={() => openDialog('online')}>
+              <span className="home-action-icon"><HomeActionIcon kind="online" /></span>
+              <strong>Play Online</strong>
+              <span className="sr-only">Quick Match, Ranked and Friends</span>
             </button>
             <button
-              className="primary-button mobile-home-play"
+              className="home-action home-action-solo"
               onClick={() => { if (status === 'over') void restartGame(); else void startGame(); }}
               disabled={startPending}
               aria-label={startPending ? 'Starting' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Keep playing' : "Let's play"}
             >
-              <Icon name="play" size={18} />
-              <span>{startPending ? 'Starting…' : status === 'over' ? 'Play another round' : mobileCanContinue ? 'Continue solo' : 'Play Solo'}</span>
-              <Icon name="arrow" size={18} />
+              <span className="home-action-icon"><HomeActionIcon kind="solo" /></span>
+              <strong>{startPending ? 'Starting…' : status === 'over' ? 'Play Again' : mobileCanContinue ? 'Continue' : 'Play Solo'}</strong>
             </button>
-            {mobileCanContinue && status !== 'over' && <button className="mobile-home-fresh" onClick={restartGame}>Start a fresh game</button>}
+            <button className="home-action home-action-daily" onClick={() => openDialog('daily')} aria-label="Daily Challenge">
+              <span className="home-action-icon"><HomeActionIcon kind="daily" /></span>
+              <strong>Daily Challenge</strong>
+              <i className="home-notification-dot" aria-hidden="true" />
+            </button>
           </section>
 
-          <button className="mobile-home-daily" onClick={() => openDialog('daily')} aria-label="Daily challenge">
-            <span className="mobile-home-daily-icon"><Icon name="calendar" size={21} /></span>
-            <span className="mobile-home-daily-copy">
-              <small>YOUR DAILY CHALLENGE</small>
-              <strong>A fresh little puzzle</strong>
-              <em>New day, new board · {new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</em>
-            </span>
-            <span className="mobile-home-daily-arrow"><Icon name="arrow" size={18} /></span>
-          </button>
-
-          <section className="mobile-home-progress" aria-label="Your progress">
-            <div className="mobile-home-section-heading">
-              <h2>Your progress</h2>
-              <button onClick={() => openDialog('profile')}>View profile <Icon name="arrow" size={13} /></button>
-            </div>
-            <div className="mobile-home-stats">
-              <div><strong>{(scores[0]?.score ?? 0).toLocaleString()}</strong><span>Personal best</span></div>
-              <div><strong>{localStats.gamesPlayed}</strong><span>Rounds played</span></div>
-              <div><strong>{localStats.bestCombo}×</strong><span>Best combo</span></div>
-            </div>
+          <section className="home-feature-grid" aria-label="Player features">
+            <button className="home-feature-card" onClick={() => openDialog('missions')}>
+              <HomeTileIcon kind="missions" />
+              <strong>Missions</strong>
+            </button>
+            <button className="home-feature-card home-feature-pass" onClick={() => openDialog('shop')}>
+              <HomeTileIcon kind="pass" />
+              <strong>Pass</strong>
+            </button>
+            <button className="home-feature-card" onClick={() => openDialog('events')}>
+              <HomeTileIcon kind="events" />
+              <strong>Events</strong>
+              <i className="home-notification-dot" aria-hidden="true" />
+            </button>
           </section>
         </section>
-
         <section className="intro" aria-label="Welcome to Block Party">
           <div className="eyebrow"><span />YOUR DAILY HAPPY PLACE</div>
           <h1>block<br className="desktop-break" /><span className="mobile-space"> </span>party<span className="title-period">.</span></h1>
@@ -1305,24 +1412,20 @@ export default function App() {
       </main>
 
       <nav className="mobile-bottom-nav" aria-label="Primary navigation">
-        <button className={`mobile-bottom-tab ${mobileScreen === 'home' ? 'is-active' : ''}`} onClick={() => {
+        <button className={`mobile-bottom-tab ${mobileScreen === 'home' && !dialog ? 'is-active' : ''}`} onClick={() => {
           if (dialog) closeDialog();
           if (statusRef.current === 'playing') changeStatus('paused');
           setMobileScreen('home');
-        }} aria-current={mobileScreen === 'home' ? 'page' : undefined}>
+        }} aria-current={mobileScreen === 'home' && !dialog ? 'page' : undefined}>
           <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Home</span>
         </button>
-        <button className={`mobile-bottom-tab ${dialog === 'daily' ? 'is-active' : ''}`} onClick={() => openDialog('daily')}>
-          <span className="mobile-bottom-icon"><Icon name="calendar" size={18} /></span><span>Daily</span>
-        </button>
-        <button className="mobile-bottom-tab" onClick={openGlobalLeaderboard} aria-label="Leaderboard">
+        <button className={`mobile-bottom-tab ${dialog === 'global' ? 'is-active' : ''}`} onClick={openGlobalLeaderboard} aria-label="Leaderboard">
           <span className="mobile-bottom-icon"><Icon name="trophy" size={18} /></span><span>Leaderboard</span>
         </button>
-        <button className="mobile-bottom-tab" onClick={() => openDialog('profile')} aria-label="Profile">
+        <button className={`mobile-bottom-tab ${dialog === 'profile' ? 'is-active' : ''}`} onClick={() => openDialog('profile')} aria-label="Profile">
           <span className="mobile-bottom-icon"><Icon name="user" size={18} /></span><span>Profile</span>
         </button>
       </nav>
-
       <nav className="feature-menu" aria-label="More Block Party screens">
         <button onClick={() => openDialog('daily')}><span>✦</span>Daily challenge</button>
         <button onClick={openGlobalLeaderboard}><span>♧</span>Global board</button>
@@ -1348,6 +1451,23 @@ export default function App() {
             <p className="dialog-intro">Today’s tray sequence is seeded from your local date. Play offline anytime; this score stays on this device and is not sent to global rankings.</p>
             <div className="feature-stat-grid"><div><strong>{new Date().toLocaleDateString(undefined, { weekday: 'long' })}</strong><span>Today’s date</span></div><div><strong>Same seed all day</strong><span>One shared local challenge</span></div></div>
             <button className="primary-button dialog-primary" onClick={startDailyChallenge}><Icon name="play" size={17} />Play today’s challenge<Icon name="arrow" size={18} /></button>
+          </>}
+          {dialog === 'missions' && <>
+            <div className="dialog-eyebrow"><Icon name="check" size={16} />YOUR DAILY GOALS</div>
+            <h2 id="dialog-title">Little missions.</h2>
+            <p className="dialog-intro">Small goals to keep your block skills growing. Progress is saved on this device.</p>
+            <div className="home-mission-list">
+              <div><span className="home-mission-icon">✦</span><span><strong>Play your first round</strong><small>{Math.min(localStats.gamesPlayed, 1)} / 1 complete</small></span><b>{localStats.gamesPlayed > 0 ? '✓' : '—'}</b></div>
+              <div><span className="home-mission-icon">▦</span><span><strong>Clear 10 lines</strong><small>{Math.min(localStats.totalLines, 10)} / 10 lines</small></span><b>{localStats.totalLines >= 10 ? '✓' : '—'}</b></div>
+              <div><span className="home-mission-icon">✧</span><span><strong>Build a 3× combo</strong><small>Best combo: {localStats.bestCombo}×</small></span><b>{localStats.bestCombo >= 3 ? '✓' : '—'}</b></div>
+            </div>
+            <p className="home-feature-note">Mission rewards and claimable tasks will be enabled in a later progression update.</p>
+          </>}
+          {dialog === 'events' && <>
+            <div className="dialog-eyebrow"><Icon name="sparkle" size={16} />HAPPENING IN BLOCK PARTY</div>
+            <h2 id="dialog-title">Events are coming.</h2>
+            <p className="dialog-intro">There isn't a live event running yet. Your daily puzzle is always ready while we prepare the first event.</p>
+            <button className="primary-button dialog-primary" onClick={() => setDialog('daily')}><Icon name="calendar" size={17} />Open Daily Challenge<Icon name="arrow" size={18} /></button>
           </>}
           {dialog === 'online' && <>
             <div className="dialog-eyebrow"><Icon name="trophy" size={16} />PLAY WITH THE WORLD</div>
