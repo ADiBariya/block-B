@@ -15,6 +15,7 @@ import { gameAudio } from './game/audio';
 import { ParticleField } from './game/particles';
 import AuthScreen from './components/AuthScreen';
 import OnboardingScreen from './components/OnboardingScreen';
+import SplashScreen from './components/SplashScreen';
 
 type IconName = 'play' | 'pause' | 'restart' | 'sound' | 'muted' | 'trophy' | 'arrow' | 'close' | 'help' | 'rotate' | 'mouse' | 'sparkle' | 'check' | 'lock' | 'keyboard' | 'calendar' | 'user';
 type Status = 'ready' | 'playing' | 'paused' | 'over';
@@ -191,16 +192,15 @@ export default function App() {
   const [localStats, setLocalStats] = useState<LocalStats>(() => readStored(STATS_KEY, { gamesPlayed: 0, totalScore: 0, totalLines: 0, bestCombo: 0 }));
   const [cosmetics, setCosmetics] = useState<CosmeticChoice>(() => readStored(COSMETICS_KEY, { theme: 'cream', skin: 'classic' }));
   const [dialog, setDialog] = useState<DialogKind>(null);
-  const [mobileScreen, setMobileScreen] = useState<'auth' | 'onboarding' | 'home' | 'game'>(() => {
+  const [mobileScreen, setMobileScreen] = useState<'splash' | 'auth' | 'onboarding' | 'home' | 'game'>(() => {
     const isMobileClient = Capacitor.isNativePlatform() || window.matchMedia('(max-width: 740px)').matches;
     if (!isMobileClient) return 'home';
     try {
-      // Show the new approved welcome screen once, including to players upgrading
-      // from the earlier onboarding flow which used a different completion key.
-      if (localStorage.getItem('blockparty.onboarding.welcome.v1') !== 'complete') return 'onboarding';
+      // A first-time mobile player sees the branded splash before the welcome page.
+      if (localStorage.getItem('blockparty.onboarding.welcome.v1') !== 'complete') return 'splash';
       return localStorage.getItem('blockparty.entry.v1') === 'offline' ? 'home' : 'auth';
     } catch {
-      return 'onboarding';
+      return 'splash';
     }
   });
   const [authNotice, setAuthNotice] = useState('');
@@ -294,7 +294,13 @@ export default function App() {
   }, [mobileScreen]);
 
   useEffect(() => {
-    if (mobileScreen !== 'onboarding') return;
+    if (mobileScreen !== 'splash') return;
+    const splashTimer = window.setTimeout(() => setMobileScreen('onboarding'), 2150);
+    return () => window.clearTimeout(splashTimer);
+  }, [mobileScreen]);
+
+  useEffect(() => {
+    if (mobileScreen !== 'onboarding' && mobileScreen !== 'splash') return;
     const previousHtmlOverflow = document.documentElement.style.overflow;
     const previousBodyOverflow = document.body.style.overflow;
     const previousOverscroll = document.body.style.overscrollBehavior;
@@ -1065,7 +1071,8 @@ export default function App() {
   const showStarterHint = game.moves === 0 && selected === 0 && !!activePiece && pieceSize(activePiece).rows === 1;
 
   return (
-    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin} ${mobileScreen === 'auth' ? 'screen-auth' : ''} ${mobileScreen === 'onboarding' ? 'screen-onboarding' : ''} ${mobileScreen === 'game' ? 'screen-game' : ''}`}>
+    <div className={`site-shell theme-${cosmetics.theme} skin-${cosmetics.skin} ${mobileScreen === 'splash' ? 'screen-splash' : ''} ${mobileScreen === 'auth' ? 'screen-auth' : ''} ${mobileScreen === 'onboarding' ? 'screen-onboarding' : ''} ${mobileScreen === 'game' ? 'screen-game' : ''}`}>
+      <SplashScreen />
       <AuthScreen notice={authNotice} onPlayOffline={enterOfflinePlay} />
       <OnboardingScreen onSkip={finishOnboarding} onComplete={finishOnboarding} />
       <header className="site-header">

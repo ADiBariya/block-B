@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Block Party',
   webDir: 'dist',
   android: {
-    backgroundColor: '#f8f7f4',
+    backgroundColor: '#d9b7f8',
   },
   plugins: {
     SystemBars: {
