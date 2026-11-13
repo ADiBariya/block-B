@@ -4,13 +4,11 @@ test('capture the current mobile app screen for Home visual review', async ({ pa
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
-
-  await page.evaluate(() => {
+  await page.addInitScript(() => {
     localStorage.setItem('blockparty.onboarding.welcome.v1', 'complete');
     localStorage.setItem('blockparty.entry.v1', 'offline');
   });
-  await page.reload();
+  await page.goto('/');
   await expect(page.locator('.home-brand-logo')).toBeVisible({ timeout: 10000 });
   await expect(page.locator('.home-action-stack')).toBeVisible();
   await expect(page.locator('.home-feature-grid')).toBeVisible();
