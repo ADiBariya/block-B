@@ -9,9 +9,7 @@ test('capture the current mobile app screen for Home visual review', async ({ pa
     localStorage.setItem('blockparty.entry.v1', 'offline');
   });
   await page.goto('/');
-  await expect(page.locator('.home-brand-logo')).toBeVisible({ timeout: 10000 });
-  await expect(page.locator('.home-action-stack')).toBeVisible();
-  await expect(page.locator('.home-feature-grid')).toBeVisible();
+  await page.waitForTimeout(500);
 
   const state = await page.evaluate(() => ({
     width: window.innerWidth,
@@ -29,4 +27,8 @@ test('capture the current mobile app screen for Home visual review', async ({ pa
     path: 'artifacts/screenshots/home-hub-current.png',
     fullPage: false,
   });
+
+  await expect(page.locator('.home-brand-logo')).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('.home-action-stack')).toBeVisible();
+  await expect(page.locator('.home-feature-grid')).toBeVisible();
 });
