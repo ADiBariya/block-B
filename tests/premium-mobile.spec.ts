@@ -56,6 +56,15 @@ test('first mobile launch shows splash, sign-in, onboarding, then home', async (
   await expect(page.getByRole('button', { name: 'Play online' })).toBeVisible();
   await expect(page.locator('.home-action-solo')).toContainText('Play Solo');
   await expect(page.getByRole('button', { name: 'Daily Challenge' })).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="crossed-swords"]')).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="gamepad"]')).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="daily-calendar"]')).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="missions-badge"]')).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="crown-pass"]')).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="event-mascot"]')).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="home-house"]')).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="leaderboard-podium"]')).toBeVisible();
+  await expect(page.locator('svg[data-home-icon="profile-avatar"]')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Missions' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Pass' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Events' })).toBeVisible();
