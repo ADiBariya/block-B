@@ -129,53 +129,156 @@ function HomeBrandLogo() {
 
 function HomeActionIcon({ kind }: { kind: 'online' | 'solo' | 'daily' }) {
   if (kind === 'online') return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <g fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M7 5 L25 25 M5 7 L25 27 M7 5 L11 4 L28 21 L25 25 L7 7Z" />
-        <path d="M25 5 L7 25 M27 7 L7 27 M25 5 L21 4 L4 21 L7 25 L25 7Z" />
-        <path d="M3 14 L10 7 M22 25 L29 18 M22 7 L29 14 M3 18 L10 25" />
+    <svg data-home-icon="crossed-swords" viewBox="0 0 36 36" aria-hidden="true">
+      <defs>
+        <linearGradient id="sword-blade" x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#fff" /><stop offset=".52" stopColor="#f4efff" /><stop offset="1" stopColor="#cdbce8" />
+        </linearGradient>
+        <linearGradient id="sword-grip" x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#e9d8ff" /><stop offset="1" stopColor="#9974d0" />
+        </linearGradient>
+      </defs>
+      <g stroke="#483365" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round">
+        <g>
+          <path d="M5 3.8 L8.2 2.9 L21.7 16.6 L18.3 20 Z" fill="url(#sword-blade)" />
+          <path d="M8.2 3 L6.1 7.1 L4.9 4.1 Z" fill="#fff" />
+          <path d="M16.6 18.3 L21.4 13.5 L23.6 15.8 L18.9 20.5 Z" fill="#e6d5ff" />
+          <path d="M17.6 20.2 L9.4 28.4" fill="none" stroke="url(#sword-grip)" strokeWidth="3.6" />
+          <path d="M14.3 18.4 L20.7 24.8" fill="none" stroke="#fff1ff" strokeWidth="3.1" />
+          <path d="M8.1 27.2 L11.1 30.2" fill="none" stroke="#483365" strokeWidth="2.2" />
+          <path d="M7.2 29.7 L10.1 32.6" fill="none" stroke="#483365" strokeWidth="2.2" />
+        </g>
+        <g>
+          <path d="M31 3.8 L27.8 2.9 L14.3 16.6 L17.7 20 Z" fill="url(#sword-blade)" />
+          <path d="M27.8 3 L29.9 7.1 L31.1 4.1 Z" fill="#fff" />
+          <path d="M19.4 18.3 L14.6 13.5 L12.4 15.8 L17.1 20.5 Z" fill="#e6d5ff" />
+          <path d="M18.4 20.2 L26.6 28.4" fill="none" stroke="url(#sword-grip)" strokeWidth="3.6" />
+          <path d="M21.7 18.4 L15.3 24.8" fill="none" stroke="#fff1ff" strokeWidth="3.1" />
+          <path d="M27.9 27.2 L24.9 30.2" fill="none" stroke="#483365" strokeWidth="2.2" />
+          <path d="M28.8 29.7 L25.9 32.6" fill="none" stroke="#483365" strokeWidth="2.2" />
+        </g>
       </g>
+      <path d="M16.1 15.4 L19.9 19.2" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M17.8 13.7 L21.6 17.5" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
+
   if (kind === 'solo') return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <path d="M10 10 H22 C25 10 27 12 28 16 L29 21 C29.5 25 26 27 23 24 L19.5 21 H12.5 L9 24 C6 27 2.5 25 3 21 L4 16 C5 12 7 10 10 10Z" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinejoin="round" />
-      <path d="M10 14 V20 M7 17 H13" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-      <circle cx="21.5" cy="16" r="1.4" fill="currentColor" /><circle cx="24.5" cy="19.5" r="1.4" fill="currentColor" />
+    <svg data-home-icon="gamepad" viewBox="0 0 36 36" aria-hidden="true">
+      <defs>
+        <linearGradient id="pad-shell" x1="0" y1="0" x2=".15" y2="1">
+          <stop stopColor="#fff" /><stop offset="1" stopColor="#e4efc8" />
+        </linearGradient>
+      </defs>
+      <path d="M11.2 9.2 H24.8 C28.8 9.2 31.1 12.1 32 17 L33.5 24.1 C34.5 29.1 30.1 32 26.4 28.9 L21.6 24.8 H14.4 L9.6 28.9 C5.9 32 1.5 29.1 2.5 24.1 L4 17 C4.9 12.1 7.2 9.2 11.2 9.2Z" fill="url(#pad-shell)" stroke="#344b36" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d="M10.3 14.7 V21.3 M7 18 H13.6" stroke="#344b36" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="23.1" cy="15.9" r="1.65" fill="#344b36" />
+      <circle cx="27.1" cy="19.7" r="1.65" fill="#344b36" />
+      <path d="M18.4 11.8 Q23 10 27 12.2" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity=".9" />
     </svg>
   );
+
   return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <rect x="5" y="7" width="22" height="21" rx="3.5" fill="none" stroke="currentColor" strokeWidth="2.3" />
-      <path d="M10 4 V10 M22 4 V10 M5 13 H27" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" />
-      <path d="M11 18 H21 M16 15 V24 M12 22 L16 26 L20 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    <svg data-home-icon="daily-calendar" viewBox="0 0 36 36" aria-hidden="true">
+      <defs>
+        <linearGradient id="calendar-paper" x1="0" y1="0" x2="0" y2="1">
+          <stop stopColor="#fff8f4" /><stop offset="1" stopColor="#ffe6df" />
+        </linearGradient>
+        <linearGradient id="calendar-red" x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#fa8881" /><stop offset="1" stopColor="#d84f58" />
+        </linearGradient>
+      </defs>
+      <rect x="5" y="7" width="26" height="25" rx="4.8" fill="url(#calendar-paper)" stroke="#c9575e" strokeWidth="2.1" />
+      <path d="M5 12.3 Q5 7 10 7 H26 Q31 7 31 12.3 V14 H5Z" fill="url(#calendar-red)" />
+      <path d="M11 4.5 V10 M25 4.5 V10" stroke="#b84853" strokeWidth="3.1" strokeLinecap="round" />
+      <path d="M11 19.2 H15.2 V23.2 H11Z M20.8 19.2 H25 V23.2 H20.8Z" fill="#f4a09a" stroke="#cb5a61" strokeWidth="1" />
+      <path d="M15.5 28.1 L18 24.4 L20.5 28.1" fill="none" stroke="#d45d63" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 function HomeTileIcon({ kind }: { kind: 'missions' | 'pass' | 'events' }) {
   if (kind === 'missions') return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <path d="M10 4 H22 L27 9 V23 L16 29 L5 23 V9Z" fill="#b79be9" stroke="#7654b8" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M11 10 H21 V20 H11Z" fill="#f7f1ff" stroke="#7654b8" strokeWidth="1.3" />
-      <path d="M13 15 L15.2 17.3 L19.5 12.8" fill="none" stroke="#7654b8" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    <svg data-home-icon="missions-badge" viewBox="0 0 36 36" aria-hidden="true">
+      <defs>
+        <linearGradient id="mission-purple" x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#c8b3fa" /><stop offset="1" stopColor="#8063cf" />
+        </linearGradient>
+      </defs>
+      <path d="M11 5.2 H25 L29 9.2 V28.2 Q29 30.5 26.7 30.5 H9.3 Q7 30.5 7 28.2 V9.2Z" fill="url(#mission-purple)" stroke="#6950a5" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M13 5 V9.5 H23 V5" fill="#8d70d0" stroke="#6950a5" strokeWidth="1.3" strokeLinejoin="round" />
+      <rect x="11.2" y="12.2" width="13.6" height="13.8" rx="2.3" fill="#fff9ff" stroke="#8c72c5" strokeWidth="1.2" />
+      <path d="M14.4 18.8 L17 21.3 L22.1 15.7" fill="none" stroke="#785ab7" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M25.6 7.5 L26.4 9.6 L28.5 10.4 L26.4 11.2 L25.6 13.3 L24.8 11.2 L22.7 10.4 L24.8 9.6Z" fill="#fff2a6" />
     </svg>
   );
+
   if (kind === 'pass') return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <path d="M4 9 L10 12 L15 5 L20 12 L28 8 L26 22 H6Z" fill="#ffc34f" stroke="#d88e29" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M6 23 H26 V27 H6Z" fill="#e89b35" stroke="#d88e29" strokeWidth="1.5" />
-      <circle cx="10" cy="9" r="2" fill="#fff0a5" /><circle cx="15" cy="5" r="2" fill="#fff0a5" /><circle cx="27" cy="8" r="2" fill="#fff0a5" />
+    <svg data-home-icon="crown-pass" viewBox="0 0 36 36" aria-hidden="true">
+      <defs>
+        <linearGradient id="pass-gold" x1="0" y1="0" x2=".2" y2="1">
+          <stop stopColor="#ffe58a" /><stop offset=".5" stopColor="#ffc34e" /><stop offset="1" stopColor="#e79a32" />
+        </linearGradient>
+      </defs>
+      <path d="M5 11.5 L12 16 L17.7 5.5 L23.8 16 L31 11.5 L28 26 H8Z" fill="url(#pass-gold)" stroke="#c9822f" strokeWidth="1.7" strokeLinejoin="round" />
+      <path d="M8 26 H28 V29.5 Q28 31 26.5 31 H9.5 Q8 31 8 29.5Z" fill="#e99d36" stroke="#c9822f" strokeWidth="1.5" />
+      <path d="M9 24 H27" stroke="#fff1b1" strokeWidth="1.6" strokeLinecap="round" opacity=".9" />
+      <circle cx="5" cy="10.5" r="2.5" fill="#fff0a4" stroke="#c9822f" strokeWidth="1" />
+      <circle cx="17.7" cy="5.2" r="2.7" fill="#fff2a6" stroke="#c9822f" strokeWidth="1" />
+      <circle cx="31" cy="10.5" r="2.5" fill="#fff0a4" stroke="#c9822f" strokeWidth="1" />
+      <path d="M17.8 12 L19.2 15.2 L22.6 15.4 L20 17.6 L20.8 20.9 L17.8 19.1 L14.9 20.9 L15.6 17.6 L13.1 15.4 L16.4 15.2Z" fill="#fff7cf" opacity=".94" />
     </svg>
   );
+
   return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <path d="M16 27 C10 23 5 19 5 12 C5 6 12 4 16 10 C20 4 27 6 27 12 C27 19 22 23 16 27Z" fill="#f2a59d" stroke="#c76f73" strokeWidth="1.7" />
-      <path d="M11 13 Q13 10 15 13 M18 13 Q20 10 22 13" fill="none" stroke="#a95461" strokeWidth="1.4" strokeLinecap="round" />
-      <path d="M13 18 Q16 21 19 18" fill="none" stroke="#a95461" strokeWidth="1.4" strokeLinecap="round" />
+    <svg data-home-icon="event-mascot" viewBox="0 0 36 36" aria-hidden="true">
+      <defs>
+        <linearGradient id="event-mascot-fill" x1="0" y1="0" x2=".7" y2="1">
+          <stop stopColor="#ffc7ba" /><stop offset=".65" stopColor="#f39d99" /><stop offset="1" stopColor="#dc7e83" />
+        </linearGradient>
+      </defs>
+      <path d="M8.5 12.6 Q4.2 5.5 9.8 4.8 Q14.1 4.3 16 10.1 Q18 9.2 20 10.1 Q21.9 4.3 26.2 4.8 Q31.8 5.5 27.5 12.6 Q31 16 30.2 22.3 Q29.1 30.5 18 31.2 Q6.9 30.5 5.8 22.3 Q5 16 8.5 12.6Z" fill="url(#event-mascot-fill)" stroke="#bd6876" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M10.2 8.1 Q12.3 7.1 13.9 11.1" fill="none" stroke="#ffe9e1" strokeWidth="1.3" strokeLinecap="round" />
+      <circle cx="13.6" cy="18.1" r="1.55" fill="#713c5a" />
+      <circle cx="22.4" cy="18.1" r="1.55" fill="#713c5a" />
+      <path d="M15.1 23 Q18 25.8 20.9 23" fill="none" stroke="#a74f66" strokeWidth="1.65" strokeLinecap="round" />
+      <ellipse cx="10.2" cy="21.3" rx="2.5" ry="1.5" fill="#f27f91" opacity=".55" />
+      <ellipse cx="25.8" cy="21.3" rx="2.5" ry="1.5" fill="#f27f91" opacity=".55" />
+      <path d="M18 13.5 L19.2 15 L18 16.3 L16.8 15Z" fill="#fff0e9" opacity=".85" />
     </svg>
   );
 }
+
+function HomeNavigationIcon({ kind }: { kind: 'home' | 'leaderboard' | 'profile' }) {
+  if (kind === 'home') return (
+    <svg data-home-icon="home-house" viewBox="0 0 28 28" aria-hidden="true">
+      <path d="M3.2 12.2 L14 3.8 L24.8 12.2" fill="none" stroke="#5d4388" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5.5 11.2 L14 4.7 L22.5 11.2 V23.3 Q22.5 24.5 21.2 24.5 H6.8 Q5.5 24.5 5.5 23.3Z" fill="#ffd36b" stroke="#6e4c91" strokeWidth="1.7" strokeLinejoin="round" />
+      <path d="M11.3 24.3 V16.1 Q11.3 14.9 12.5 14.9 H15.5 Q16.7 14.9 16.7 16.1 V24.3Z" fill="#fff4d4" stroke="#a9773c" strokeWidth="1.1" />
+      <path d="M7.2 12.2 L14 7 L20.8 12.2" fill="none" stroke="#fff2bc" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  );
+  if (kind === 'leaderboard') return (
+    <svg data-home-icon="leaderboard-podium" viewBox="0 0 28 28" aria-hidden="true">
+      <path d="M4.2 14.5 H10.5 V23.5 H4.2Z" fill="#ad91dc" stroke="#5a477c" strokeWidth="1.4" />
+      <path d="M10.8 9 H17.2 V23.5 H10.8Z" fill="#8d70c4" stroke="#5a477c" strokeWidth="1.4" />
+      <path d="M17.5 16 H23.8 V23.5 H17.5Z" fill="#bba5e6" stroke="#5a477c" strokeWidth="1.4" />
+      <circle cx="7.3" cy="8.7" r="3.1" fill="#d9c9f6" stroke="#5a477c" strokeWidth="1.3" />
+      <circle cx="14" cy="4.5" r="3.1" fill="#d9c9f6" stroke="#5a477c" strokeWidth="1.3" />
+      <circle cx="20.7" cy="10.3" r="3.1" fill="#d9c9f6" stroke="#5a477c" strokeWidth="1.3" />
+      <path d="M12.2 15 H15.8 M12.5 18 H15.5" stroke="#fff" strokeWidth="1" strokeLinecap="round" />
+    </svg>
+  );
+  return (
+    <svg data-home-icon="profile-avatar" viewBox="0 0 28 28" aria-hidden="true">
+      <circle cx="14" cy="8.5" r="4.4" fill="#9e83c9" stroke="#4e3c6a" strokeWidth="1.5" />
+      <path d="M5.5 24 Q5.7 15.7 14 15.7 Q22.3 15.7 22.5 24Z" fill="#8f77b9" stroke="#4e3c6a" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M10.3 8.1 Q11.1 4.1 15.6 4.6 Q18.6 5 18.5 9.2 Q16.2 6.6 10.3 8.1Z" fill="#3d2c55" />
+      <path d="M11.8 18.3 L14 20.5 L16.2 18.3" fill="none" stroke="#f3eaff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 
 function HomeCoinIcon() {
   return (
@@ -1417,13 +1520,13 @@ export default function App() {
           if (statusRef.current === 'playing') changeStatus('paused');
           setMobileScreen('home');
         }} aria-current={mobileScreen === 'home' && !dialog ? 'page' : undefined}>
-          <span className="mobile-bottom-icon"><Icon name="play" size={18} /></span><span>Home</span>
+          <span className="mobile-bottom-icon"><HomeNavigationIcon kind="home" /></span><span>Home</span>
         </button>
         <button className={`mobile-bottom-tab ${dialog === 'global' ? 'is-active' : ''}`} onClick={openGlobalLeaderboard} aria-label="Leaderboard">
-          <span className="mobile-bottom-icon"><Icon name="trophy" size={18} /></span><span>Leaderboard</span>
+          <span className="mobile-bottom-icon"><HomeNavigationIcon kind="leaderboard" /></span><span>Leaderboard</span>
         </button>
         <button className={`mobile-bottom-tab ${dialog === 'profile' ? 'is-active' : ''}`} onClick={() => openDialog('profile')} aria-label="Profile">
-          <span className="mobile-bottom-icon"><Icon name="user" size={18} /></span><span>Profile</span>
+          <span className="mobile-bottom-icon"><HomeNavigationIcon kind="profile" /></span><span>Profile</span>
         </button>
       </nav>
       <nav className="feature-menu" aria-label="More Block Party screens">
