@@ -266,6 +266,24 @@ function HomeTileIcon({ kind }: { kind: 'missions' | 'pass' | 'events' }) {
   );
 }
 
+function HomeCoinIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <defs>
+        <linearGradient id="home-coin-fill" x1="0" y1="0" x2=".8" y2="1">
+          <stop stopColor="#ffe68b" />
+          <stop offset=".52" stopColor="#ffc746" />
+          <stop offset="1" stopColor="#e99b2d" />
+        </linearGradient>
+      </defs>
+      <circle cx="12" cy="12" r="10.2" fill="url(#home-coin-fill)" stroke="#d98a2d" strokeWidth="1.2" />
+      <circle cx="12" cy="12" r="7.4" fill="none" stroke="#fff0a8" strokeWidth="1.15" />
+      <path d="M14.9 8.8 C13.8 7.4 9.2 7.2 9.1 9.8 C9 12.3 15.1 11.2 14.9 14 C14.7 16.7 10.1 17 8.9 14.8 M12 6.9 V17.2" fill="none" stroke="#9c6823" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M5.7 7.8 Q7.2 4.5 11.4 4" fill="none" stroke="#fff8cc" strokeWidth="1.2" strokeLinecap="round" opacity=".9" />
+    </svg>
+  );
+}
+
 function HomeNavigationIcon({ kind }: { kind: 'home' | 'leaderboard' | 'profile' }) {
   if (kind === 'home') return (
     <svg data-home-icon="home-house" viewBox="0 0 36 36" aria-hidden="true">
