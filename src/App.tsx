@@ -307,20 +307,21 @@ function HomeNavigationIcon({ kind }: { kind: 'home' | 'leaderboard' | 'profile'
   if (kind === 'leaderboard') return (
     <svg data-home-icon="leaderboard-podium" viewBox="0 0 36 36" aria-hidden="true">
       <defs>
-        <linearGradient id="nav-trophy-gold" x1="0" y1="0" x2="0" y2="1">
-          <stop stopColor="#ffe78f" /><stop offset=".58" stopColor="#ffc34c" /><stop offset="1" stopColor="#d98a2e" />
+        <linearGradient id="nav-leader-head" x1="0" y1="0" x2="0" y2="1">
+          <stop stopColor="#e0d4f7" /><stop offset="1" stopColor="#b39bdf" />
         </linearGradient>
-        <linearGradient id="nav-podium-purple" x1="0" y1="0" x2="0" y2="1">
-          <stop stopColor="#cdb7f2" /><stop offset="1" stopColor="#8769c0" />
+        <linearGradient id="nav-leader-body" x1="0" y1="0" x2="0" y2="1">
+          <stop stopColor="#bda7e8" /><stop offset="1" stopColor="#8066b7" />
         </linearGradient>
       </defs>
-      <path d="M11 5.2 H25 V9 Q25 18 18 20 Q11 18 11 9Z" fill="url(#nav-trophy-gold)" stroke="#9a6531" strokeWidth="1.8" />
-      <path d="M11 8 H6.5 V10.5 Q6.5 16 13.7 16.9 M25 8 H29.5 V10.5 Q29.5 16 22.3 16.9" fill="none" stroke="#b47a36" strokeWidth="2.6" strokeLinecap="round" />
-      <path d="M18 20 V24.1 M13.5 25 H22.5" stroke="#91623d" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M7 28 H29 V32 H7Z" fill="url(#nav-podium-purple)" stroke="#594475" strokeWidth="1.5" />
-      <path d="M4 29 H10 V32 H4Z M26 29 H32 V32 H26Z" fill="#bca6e8" stroke="#594475" strokeWidth="1.3" />
-      <path d="M18 8 L19.4 11.1 L22.7 11.4 L20.2 13.6 L20.9 16.8 L18 15.1 L15.1 16.8 L15.8 13.6 L13.3 11.4 L16.6 11.1Z" fill="#fff6c9" />
-      <circle cx="18" cy="3.7" r="1.8" fill="#fff1b4" stroke="#b47a36" strokeWidth=".8" />
+      <circle cx="18" cy="8.4" r="4.4" fill="url(#nav-leader-head)" stroke="#584273" strokeWidth="1.6" />
+      <circle cx="7.8" cy="13.2" r="3.5" fill="#d9cbf2" stroke="#584273" strokeWidth="1.4" />
+      <circle cx="28.2" cy="13.2" r="3.5" fill="#d9cbf2" stroke="#584273" strokeWidth="1.4" />
+      <path d="M9.2 29.8 Q9.2 18.1 18 18.1 Q26.8 18.1 26.8 29.8 Q26.8 31.2 25.2 31.2 H10.8 Q9.2 31.2 9.2 29.8Z" fill="url(#nav-leader-body)" stroke="#584273" strokeWidth="1.7" />
+      <path d="M1.9 28.8 Q2.4 19.4 8.1 19.4 Q10.1 19.4 11.5 21.1 Q9 24.4 9 29.5 H3.4 Q1.8 29.5 1.9 28.8Z" fill="#c3b1e8" stroke="#584273" strokeWidth="1.4" />
+      <path d="M34.1 28.8 Q33.6 19.4 27.9 19.4 Q25.9 19.4 24.5 21.1 Q27 24.4 27 29.5 H32.6 Q34.2 29.5 34.1 28.8Z" fill="#c3b1e8" stroke="#584273" strokeWidth="1.4" />
+      <path d="M14.5 6.8 Q18 3.1 21.4 6.8" fill="none" stroke="#fff8ff" strokeWidth="1.3" strokeLinecap="round" />
+      <path d="M15.5 22 L18 24.4 L20.5 22" fill="none" stroke="#f3eaff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
   return (
