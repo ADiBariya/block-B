@@ -1,0 +1,43 @@
+name: Home UI Preview
+
+on:
+  push:
+    branches:
+      - feat/home-reference-icons-typography
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture-home-preview:
+    name: Capture mobile Home screenshot
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Capture Home UI
+        run: npx playwright test tests/home-preview.spec.ts --reporter=line
+
+      - name: Upload Home screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: block-party-current-home-preview
+          path: artifacts/screenshots/home-hub-current.png
+          if-no-files-found: error
+          retention-days: 7

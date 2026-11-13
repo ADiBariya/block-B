@@ -2978,3 +2978,735 @@ body:has(.site-shell.screen-auth) #root {
     animation: none !important;
   }
 }
+
+
+/* Home icon and typography polish — reference-matched original game artwork */
+@media (max-width: 740px) {
+  .site-shell.screen-home .mobile-home-screen,
+  .site-shell.screen-home .mobile-home-screen button {
+    font-family: "sans-serif-rounded", "Nunito", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+    font-synthesis: none;
+  }
+
+  .site-shell.screen-home .home-player-details strong {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .18px;
+  }
+  .site-shell.screen-home .home-player-details small {
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .08px;
+  }
+  .site-shell.screen-home .home-wallet strong {
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: -.1px;
+  }
+
+  .site-shell.screen-home .home-action {
+    gap: 9px;
+  }
+  .site-shell.screen-home .home-action strong {
+    font-family: "sans-serif-rounded", "Nunito", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+    font-size: clamp(12px, 3.2vw, 14px);
+    font-weight: 900;
+    letter-spacing: -.28px;
+    line-height: 1.05;
+  }
+  .site-shell.screen-home .home-action-daily strong {
+    font-size: clamp(11px, 3vw, 13px);
+    letter-spacing: -.2px;
+  }
+  .site-shell.screen-home .home-action-icon {
+    width: 26px;
+    height: 26px;
+    filter: drop-shadow(0 1px 1px #4b31652e);
+  }
+  .site-shell.screen-home .home-action-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .site-shell.screen-home .home-action-online .home-action-icon {
+    color: #fff8ff;
+    filter: drop-shadow(0 1px 1px #59378362);
+  }
+  .site-shell.screen-home .home-action-solo .home-action-icon {
+    color: #344b36;
+    filter: drop-shadow(0 1px 1px #425c3038);
+  }
+  .site-shell.screen-home .home-action-daily .home-action-icon {
+    color: #cf555b;
+    filter: drop-shadow(0 1px 1px #9f4d5635);
+  }
+
+  .site-shell.screen-home .home-feature-card {
+    gap: 3px;
+  }
+  .site-shell.screen-home .home-feature-card > svg {
+    width: 24px;
+    height: 24px;
+    overflow: visible;
+    filter: drop-shadow(0 1.4px 1.2px #50316d30);
+  }
+  .site-shell.screen-home .home-feature-card strong {
+    font-family: "sans-serif-rounded", "Nunito", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+    color: #332447;
+    font-size: clamp(8.5px, 2.4vw, 10px);
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -.12px;
+  }
+  .site-shell.screen-home .home-feature-pass > svg {
+    filter: drop-shadow(0 1.5px 1.5px #a56d2f3d);
+  }
+
+  .site-shell.screen-home .mobile-bottom-tab {
+    font-family: "sans-serif-rounded", "Nunito", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+    font-size: 8.5px;
+    font-weight: 850;
+    letter-spacing: -.1px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon {
+    width: 27px;
+    height: 26px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon svg {
+    width: 21px;
+    height: 21px;
+    overflow: visible;
+    filter: drop-shadow(0 1px 1px #49326424);
+  }
+  .site-shell.screen-home .mobile-bottom-tab.is-active .mobile-bottom-icon svg {
+    filter: drop-shadow(0 1px 1px #593b7b30);
+  }
+}
+@media (max-height: 620px) and (max-width: 740px) {
+  .site-shell.screen-home .home-action-icon { width: 22px; height: 22px; }
+  .site-shell.screen-home .home-feature-card > svg { width: 21px; height: 21px; }
+  .site-shell.screen-home .mobile-bottom-icon svg { width: 19px; height: 19px; }
+}
+
+
+/* Final Home reference pass: full pastel cloud scene, tighter footer rhythm */
+@media (max-width: 740px) {
+  .site-shell.screen-home {
+    background:
+      radial-gradient(ellipse 56% 17% at 4% 1%, #fff3ffde 0%, #fff3ff00 100%),
+      radial-gradient(ellipse 44% 17% at 96% 7%, #fce7ffdc 0%, #fce7ff00 100%),
+      radial-gradient(ellipse 30% 13% at 0% 24%, #c9a8edbb 0%, #c9a8ed00 100%),
+      radial-gradient(ellipse 26% 12% at 100% 33%, #f5c9d7ab 0%, #f5c9d700 100%),
+      radial-gradient(ellipse 38% 16% at 2% 68%, #c6a0eab8 0%, #c6a0ea00 100%),
+      radial-gradient(ellipse 38% 15% at 100% 77%, #d4b1f0c7 0%, #d4b1f000 100%),
+      radial-gradient(ellipse 48% 16% at 50% 100%, #fff0ffed 0%, #fff0ff00 100%),
+      linear-gradient(180deg, #e1c1f8 0%, #ecd2fa 39%, #f5ddf7 75%, #e4c9f6 100%);
+  }
+
+  .site-shell.screen-home .mobile-home-screen {
+    grid-template-rows: auto clamp(150px, 25svh, 212px) auto auto;
+    gap: clamp(8px, 1.25svh, 12px);
+    padding-top: 3px;
+  }
+
+  .home-sky-decor {
+    inset: -14px -14px -92px;
+    background:
+      radial-gradient(ellipse 41% 9% at 0% 8%, #fff1ffab 0%, transparent 100%),
+      radial-gradient(ellipse 37% 10% at 100% 15%, #fff1ffb3 0%, transparent 100%),
+      radial-gradient(ellipse 30% 12% at 0% 42%, #d1b2ef9c 0%, transparent 100%),
+      radial-gradient(ellipse 30% 11% at 100% 49%, #e6c4f3a6 0%, transparent 100%),
+      radial-gradient(ellipse 39% 12% at 0% 87%, #c5a0e9ce 0%, transparent 100%),
+      radial-gradient(ellipse 42% 14% at 30% 100%, #fff0ffd9 0%, transparent 100%),
+      radial-gradient(ellipse 37% 12% at 100% 88%, #c9a5e9d1 0%, transparent 100%);
+  }
+
+  .home-cloud {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    filter: blur(9px);
+    pointer-events: none;
+    opacity: .9;
+    mix-blend-mode: normal;
+  }
+  .home-cloud-top-left {
+    top: -1%;
+    left: -22%;
+    width: 67%;
+    height: 18%;
+    background:
+      radial-gradient(ellipse 28% 68% at 45% 72%, #f8eaff 0%, #f8eaff00 100%),
+      radial-gradient(ellipse 34% 74% at 70% 56%, #f3e0ff 0%, #f3e0ff00 100%),
+      radial-gradient(ellipse 33% 80% at 20% 65%, #e8d3fb 0%, #e8d3fb00 100%);
+  }
+  .home-cloud-top-right {
+    top: 1%;
+    right: -22%;
+    width: 62%;
+    height: 18%;
+    background:
+      radial-gradient(ellipse 35% 69% at 36% 64%, #f9e8ff 0%, #f9e8ff00 100%),
+      radial-gradient(ellipse 39% 78% at 75% 56%, #f2d8fc 0%, #f2d8fc00 100%);
+  }
+  .home-cloud-left {
+    top: 22%;
+    left: -40%;
+    width: 82%;
+    height: 28%;
+    background:
+      radial-gradient(ellipse 38% 62% at 50% 60%, #bea0e8 0%, #cbb0efbb 49%, #cbb0ef00 100%),
+      radial-gradient(ellipse 28% 58% at 75% 43%, #e5c9f8 0%, #e5c9f800 100%);
+    filter: blur(12px);
+  }
+  .home-cloud-right {
+    top: 31%;
+    right: -40%;
+    width: 80%;
+    height: 27%;
+    background:
+      radial-gradient(ellipse 42% 63% at 43% 58%, #d2b2ed 0%, #d2b2edb8 47%, #d2b2ed00 100%),
+      radial-gradient(ellipse 31% 62% at 20% 40%, #f4d7f6 0%, #f4d7f600 100%);
+    filter: blur(12px);
+  }
+  .home-cloud-bottom-left {
+    left: -22%;
+    bottom: -4%;
+    width: 73%;
+    height: 26%;
+    background:
+      radial-gradient(ellipse 34% 60% at 42% 54%, #c49de9 0%, #c49de9e0 44%, #c49de900 100%),
+      radial-gradient(ellipse 32% 54% at 72% 43%, #e2c5f4 0%, #e2c5f400 100%);
+    filter: blur(10px);
+  }
+  .home-cloud-bottom-center {
+    left: 15%;
+    bottom: -12%;
+    width: 78%;
+    height: 27%;
+    background:
+      radial-gradient(ellipse 38% 69% at 50% 48%, #fff0ff 0%, #fff0ffdc 44%, #fff0ff00 100%),
+      radial-gradient(ellipse 30% 55% at 20% 56%, #f7e5fa 0%, #f7e5fa00 100%);
+    filter: blur(12px);
+  }
+  .home-cloud-bottom-right {
+    right: -24%;
+    bottom: -2%;
+    width: 68%;
+    height: 24%;
+    background:
+      radial-gradient(ellipse 36% 64% at 52% 52%, #caa8ed 0%, #caa8edda 45%, #caa8ed00 100%),
+      radial-gradient(ellipse 32% 50% at 18% 44%, #f1d9f7 0%, #f1d9f700 100%);
+    filter: blur(11px);
+  }
+
+  .home-floating-block {
+    width: clamp(42px, 12vw, 56px);
+    border-radius: 10px;
+    border: 1.5px solid #ffffffb3;
+    box-shadow:
+      inset 2px 3px 0 #ffffffa8,
+      inset -3px -4px 0 #54337728,
+      0 9px 18px #61418430;
+    opacity: .92;
+  }
+  .home-floating-block-left {
+    top: 25%;
+    left: -2%;
+    background: linear-gradient(145deg, #d5b5ff 0%, #b58ce9 52%, #8d61c9 100%);
+  }
+  .home-floating-block-right {
+    top: 17%;
+    right: -2%;
+    background: linear-gradient(145deg, #ffe0a8 0%, #ffc77d 49%, #e99c55 100%);
+  }
+  .home-floating-block::before {
+    content: "";
+    position: absolute;
+    left: 15%;
+    top: 12%;
+    width: 68%;
+    height: 14%;
+    border-radius: 99px;
+    background: #fff9;
+    transform: rotate(-7deg);
+  }
+  .home-floating-block::after {
+    content: "";
+    position: absolute;
+    right: -6px;
+    bottom: 4px;
+    width: 7px;
+    height: 64%;
+    border-radius: 0 5px 5px 0;
+    background: #704aa331;
+    transform: skewY(-25deg);
+  }
+
+  .site-shell.screen-home .home-brand-logo {
+    width: clamp(132px, 42vw, 170px);
+    max-height: min(23svh, 194px);
+  }
+  .site-shell.screen-home .home-action-stack {
+    gap: clamp(9px, 1.5svh, 13px);
+  }
+  .site-shell.screen-home .home-action {
+    min-height: clamp(48px, 7.2svh, 61px);
+    border-radius: 15px;
+  }
+  .site-shell.screen-home .home-feature-card {
+    min-height: clamp(57px, 8.5svh, 70px);
+    border-radius: 13px;
+  }
+
+  .site-shell.screen-home .home-action-icon {
+    width: 31px;
+    height: 31px;
+  }
+  .site-shell.screen-home .home-action-online .home-action-icon {
+    filter: drop-shadow(0 1.3px 1px #56318455);
+  }
+  .site-shell.screen-home .home-feature-card > svg {
+    width: 26px;
+    height: 26px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon {
+    width: 30px;
+    height: 28px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .site-shell.screen-home .mobile-bottom-nav {
+    min-height: 60px;
+    padding: 6px 8px;
+  }
+  .site-shell.screen-home .mobile-bottom-tab {
+    min-height: 46px;
+    gap: 1px;
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+}
+@media (max-height: 700px) and (max-width: 740px) {
+  .site-shell.screen-home .mobile-home-screen {
+    grid-template-rows: auto minmax(115px, 23svh) auto auto;
+    gap: 7px;
+  }
+  .site-shell.screen-home .home-brand-logo {
+    width: clamp(108px, 34vw, 145px);
+    max-height: 19svh;
+  }
+  .site-shell.screen-home .home-action {
+    min-height: 43px;
+  }
+  .site-shell.screen-home .home-action-stack { gap: 6px; }
+  .site-shell.screen-home .home-feature-card { min-height: 51px; }
+}
+
+/* HOME LAYOUT CORRECTION — locked proportions to the supplied portrait reference */
+@media (max-width: 740px) {
+  .site-shell.screen-home {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 4px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+    background:
+      linear-gradient(180deg, #e7cff9 0%, #f1dcfa 46%, #f7e4f8 73%, #e7cff8 100%);
+  }
+
+  .site-shell.screen-home .mobile-home-screen {
+    display: grid !important;
+    grid-template-rows:
+      38px
+      minmax(180px, 23svh)
+      minmax(220px, 33svh)
+      minmax(78px, 13svh);
+    align-content: space-between;
+    align-items: stretch;
+    gap: 6px;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* The reference uses small soft cloud puffs at the edges, not oversized circular blobs. */
+  .home-sky-decor {
+    inset: -8px -14px -16px;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 44% 10% at 4% 2%, #fff4ffad 0%, transparent 100%),
+      radial-gradient(ellipse 40% 9% at 96% 7%, #fff2ffad 0%, transparent 100%);
+  }
+  .home-cloud {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    filter: blur(3px);
+    opacity: .86;
+    pointer-events: none;
+    mix-blend-mode: normal;
+  }
+  .home-cloud-top-left {
+    top: -2%;
+    left: -18%;
+    width: 56%;
+    height: 18%;
+    background:
+      radial-gradient(ellipse 24% 44% at 18% 68%, #f8eaff 0 72%, transparent 100%),
+      radial-gradient(ellipse 30% 56% at 42% 48%, #f4e2ff 0 70%, transparent 100%),
+      radial-gradient(ellipse 28% 48% at 66% 65%, #f8ebff 0 70%, transparent 100%),
+      radial-gradient(ellipse 22% 38% at 84% 72%, #e8d3fb 0 70%, transparent 100%);
+  }
+  .home-cloud-top-right {
+    top: 0;
+    right: -20%;
+    width: 58%;
+    height: 19%;
+    background:
+      radial-gradient(ellipse 25% 44% at 17% 70%, #f8eaff 0 72%, transparent 100%),
+      radial-gradient(ellipse 31% 55% at 46% 48%, #f5e2ff 0 70%, transparent 100%),
+      radial-gradient(ellipse 28% 52% at 72% 68%, #fff0ff 0 70%, transparent 100%);
+  }
+  .home-cloud-left {
+    top: 23%;
+    left: -36%;
+    width: 62%;
+    height: 22%;
+    filter: blur(5px);
+    background:
+      radial-gradient(ellipse 28% 50% at 20% 70%, #c8a7ed 0 65%, transparent 100%),
+      radial-gradient(ellipse 32% 62% at 45% 48%, #d7baf2 0 69%, transparent 100%),
+      radial-gradient(ellipse 27% 47% at 72% 68%, #e4caf8 0 68%, transparent 100%);
+  }
+  .home-cloud-right {
+    top: 27%;
+    right: -37%;
+    width: 64%;
+    height: 22%;
+    filter: blur(5px);
+    background:
+      radial-gradient(ellipse 28% 48% at 25% 68%, #e7c9f6 0 68%, transparent 100%),
+      radial-gradient(ellipse 34% 59% at 54% 44%, #d4b4ef 0 70%, transparent 100%),
+      radial-gradient(ellipse 27% 48% at 80% 68%, #c8a6eb 0 68%, transparent 100%);
+  }
+  .home-cloud-bottom-left {
+    left: -22%;
+    bottom: -6%;
+    width: 66%;
+    height: 20%;
+    filter: blur(4px);
+    background:
+      radial-gradient(ellipse 25% 45% at 18% 65%, #c6a2ec 0 69%, transparent 100%),
+      radial-gradient(ellipse 34% 60% at 46% 43%, #d7b8f1 0 70%, transparent 100%),
+      radial-gradient(ellipse 28% 48% at 76% 64%, #e7cff8 0 70%, transparent 100%);
+  }
+  .home-cloud-bottom-center {
+    left: 18%;
+    bottom: -12%;
+    width: 70%;
+    height: 23%;
+    filter: blur(5px);
+    background:
+      radial-gradient(ellipse 29% 50% at 18% 66%, #f8e9fb 0 68%, transparent 100%),
+      radial-gradient(ellipse 38% 68% at 48% 40%, #fff1ff 0 71%, transparent 100%),
+      radial-gradient(ellipse 30% 51% at 81% 66%, #f5e2fa 0 69%, transparent 100%);
+  }
+  .home-cloud-bottom-right {
+    right: -23%;
+    bottom: -5%;
+    width: 64%;
+    height: 20%;
+    filter: blur(4px);
+    background:
+      radial-gradient(ellipse 27% 47% at 19% 64%, #e6cff8 0 68%, transparent 100%),
+      radial-gradient(ellipse 34% 60% at 53% 44%, #c9a6ec 0 70%, transparent 100%),
+      radial-gradient(ellipse 26% 46% at 80% 66%, #d8b8f0 0 68%, transparent 100%);
+  }
+
+  .site-shell.screen-home .home-topbar {
+    grid-row: 1;
+    min-height: 38px;
+    height: 38px;
+    align-self: start;
+  }
+
+  .site-shell.screen-home .home-brand-stage {
+    grid-row: 2;
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    align-self: stretch;
+    height: 100%;
+    min-height: 0;
+    padding-top: clamp(26px, 3.4svh, 42px);
+    overflow: visible;
+  }
+  .site-shell.screen-home .home-brand-logo {
+    width: clamp(142px, 44vw, 174px);
+    height: auto;
+    max-height: 20svh;
+  }
+
+  .site-shell.screen-home .home-action-stack {
+    grid-row: 3;
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    align-self: stretch;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    gap: clamp(6px, .9svh, 9px);
+  }
+  .site-shell.screen-home .home-action {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border-radius: 14px;
+  }
+  .site-shell.screen-home .home-action strong {
+    font-size: clamp(13px, 3.25vw, 15px);
+    letter-spacing: -.25px;
+  }
+  .site-shell.screen-home .home-action-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .site-shell.screen-home .home-feature-grid {
+    grid-row: 4;
+    align-self: stretch;
+    height: 100%;
+    min-height: 0;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 7px;
+  }
+  .site-shell.screen-home .home-feature-card {
+    height: 100%;
+    min-height: 0;
+    padding: 5px 2px 4px;
+    gap: 3px;
+    border-radius: 12px;
+  }
+  .site-shell.screen-home .home-feature-card > svg {
+    width: 27px;
+    height: 27px;
+  }
+  .site-shell.screen-home .home-feature-card strong {
+    font-size: clamp(9px, 2.5vw, 11px);
+    font-weight: 900;
+  }
+
+  .site-shell.screen-home .mobile-bottom-nav {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 7px);
+    min-height: 60px;
+    padding: 5px 7px;
+    border-radius: 15px;
+  }
+  .site-shell.screen-home .mobile-bottom-tab {
+    min-height: 47px;
+    gap: 0;
+    font-size: 9px;
+    font-weight: 850;
+  }
+  .site-shell.screen-home .mobile-bottom-icon {
+    width: 28px;
+    height: 27px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+@media (max-height: 740px) and (max-width: 740px) {
+  .site-shell.screen-home .mobile-home-screen {
+    grid-template-rows: 34px minmax(150px, 23svh) minmax(190px, 33svh) minmax(68px, 13svh);
+    gap: 5px;
+  }
+  .site-shell.screen-home .home-topbar { height: 34px; min-height: 34px; }
+  .site-shell.screen-home .home-brand-stage { padding-top: 20px; }
+  .site-shell.screen-home .home-brand-logo { width: clamp(122px, 41vw, 150px); max-height: 19svh; }
+  .site-shell.screen-home .home-action { border-radius: 12px; }
+  .site-shell.screen-home .home-feature-card > svg { width: 22px; height: 22px; }
+}
+
+/* Reference finish: cloud scene continues behind the lower dock; icons get reference scale */
+@media (max-width: 740px) {
+  .site-shell.screen-home .mobile-home-screen {
+    overflow: visible;
+  }
+  .site-shell.screen-home .home-sky-decor {
+    inset: -8px -14px -102px;
+    overflow: hidden;
+  }
+  .site-shell.screen-home .home-cloud-bottom-left {
+    left: -25%;
+    bottom: -2%;
+    width: 79%;
+    height: 25%;
+    filter: blur(5px);
+    opacity: .92;
+    background:
+      radial-gradient(ellipse 28% 48% at 17% 68%, #c5a1eb 0 70%, transparent 100%),
+      radial-gradient(ellipse 34% 62% at 44% 42%, #d7b7f2 0 72%, transparent 100%),
+      radial-gradient(ellipse 28% 50% at 74% 66%, #ead3f8 0 69%, transparent 100%),
+      radial-gradient(ellipse 18% 35% at 96% 73%, #f2e1fb 0 68%, transparent 100%);
+  }
+  .site-shell.screen-home .home-cloud-bottom-center {
+    left: 10%;
+    bottom: -10%;
+    width: 83%;
+    height: 26%;
+    filter: blur(6px);
+    opacity: .95;
+    background:
+      radial-gradient(ellipse 24% 43% at 12% 67%, #f2def8 0 68%, transparent 100%),
+      radial-gradient(ellipse 31% 57% at 36% 49%, #fff0ff 0 72%, transparent 100%),
+      radial-gradient(ellipse 32% 62% at 65% 42%, #fff3ff 0 72%, transparent 100%),
+      radial-gradient(ellipse 24% 44% at 91% 68%, #e9d0f7 0 68%, transparent 100%);
+  }
+  .site-shell.screen-home .home-cloud-bottom-right {
+    right: -25%;
+    bottom: -1%;
+    width: 76%;
+    height: 24%;
+    filter: blur(5px);
+    opacity: .92;
+    background:
+      radial-gradient(ellipse 26% 46% at 16% 68%, #ead3f8 0 68%, transparent 100%),
+      radial-gradient(ellipse 34% 61% at 49% 44%, #cfadee 0 72%, transparent 100%),
+      radial-gradient(ellipse 29% 50% at 81% 66%, #dcbff2 0 70%, transparent 100%);
+  }
+  .site-shell.screen-home .home-floating-block {
+    width: clamp(38px, 11vw, 50px);
+    border-radius: 8px;
+    opacity: .86;
+  }
+  .site-shell.screen-home .home-action-icon {
+    width: 35px;
+    height: 35px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon svg {
+    width: 27px;
+    height: 27px;
+  }
+}
+
+
+/* Final screen-height composition tuned to the supplied 170×342 Home reference */
+@media (max-width: 740px) {
+  .site-shell.screen-home .mobile-home-screen {
+    position: relative;
+    display: block !important;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .site-shell.screen-home .home-topbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 38px;
+    min-height: 38px;
+  }
+
+  .site-shell.screen-home .home-brand-stage {
+    position: absolute;
+    top: 9.2svh;
+    left: 0;
+    right: 0;
+    height: 23svh;
+    padding: 4.9svh 0 0;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+  }
+  .site-shell.screen-home .home-brand-logo {
+    width: clamp(142px, 44vw, 174px);
+    max-height: 20svh;
+  }
+
+  .site-shell.screen-home .home-action-stack {
+    position: absolute;
+    top: 36.3svh;
+    left: 0;
+    right: 0;
+    height: 34.6svh;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0,1fr));
+    gap: .8svh;
+  }
+  .site-shell.screen-home .home-action {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border-radius: 14px;
+  }
+
+  .site-shell.screen-home .home-feature-grid {
+    position: absolute;
+    top: 73.4svh;
+    left: 0;
+    right: 0;
+    height: 13.2svh;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 7px;
+  }
+  .site-shell.screen-home .home-feature-card {
+    height: 100%;
+    min-height: 0;
+    border-radius: 12px;
+  }
+
+  .site-shell.screen-home .mobile-bottom-nav {
+    min-height: clamp(64px, 8.8svh, 78px);
+    padding: 5px 7px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 5px);
+    border-radius: 15px;
+  }
+  .site-shell.screen-home .mobile-bottom-tab {
+    min-height: 100%;
+    gap: 0;
+    font-size: 9px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon {
+    width: 29px;
+    height: 29px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .site-shell.screen-home .home-sky-decor {
+    inset: -8px -14px -112px;
+  }
+}
+@media (max-height: 700px) and (max-width: 740px) {
+  .site-shell.screen-home .home-brand-stage {
+    top: 8.8svh;
+    height: 22svh;
+    padding-top: 4.1svh;
+  }
+  .site-shell.screen-home .home-brand-logo {
+    width: clamp(120px, 41vw, 150px);
+    max-height: 18svh;
+  }
+  .site-shell.screen-home .home-action-stack {
+    top: 35.5svh;
+    height: 34svh;
+  }
+  .site-shell.screen-home .home-feature-grid {
+    top: 72.3svh;
+    height: 13.2svh;
+  }
+}
