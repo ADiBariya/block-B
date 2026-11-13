@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('capture the current mobile app screen for Home visual review', async ({ page }) => {
   const pageErrors: string[] = [];
@@ -11,7 +11,9 @@ test('capture the current mobile app screen for Home visual review', async ({ pa
     localStorage.setItem('blockparty.entry.v1', 'offline');
   });
   await page.reload();
-  await page.waitForTimeout(900);
+  await expect(page.locator('.home-brand-logo')).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('.home-action-stack')).toBeVisible();
+  await expect(page.locator('.home-feature-grid')).toBeVisible();
 
   const state = await page.evaluate(() => ({
     width: window.innerWidth,
