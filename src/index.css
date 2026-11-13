@@ -3306,3 +3306,228 @@ body:has(.site-shell.screen-auth) #root {
   .site-shell.screen-home .home-action-stack { gap: 6px; }
   .site-shell.screen-home .home-feature-card { min-height: 51px; }
 }
+
+/* HOME LAYOUT CORRECTION — locked proportions to the supplied portrait reference */
+@media (max-width: 740px) {
+  .site-shell.screen-home {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 4px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+    background:
+      linear-gradient(180deg, #e7cff9 0%, #f1dcfa 46%, #f7e4f8 73%, #e7cff8 100%);
+  }
+
+  .site-shell.screen-home .mobile-home-screen {
+    display: grid !important;
+    grid-template-rows:
+      38px
+      minmax(180px, 23svh)
+      minmax(220px, 33svh)
+      minmax(78px, 13svh);
+    align-content: space-between;
+    align-items: stretch;
+    gap: 6px;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* The reference uses small soft cloud puffs at the edges, not oversized circular blobs. */
+  .home-sky-decor {
+    inset: -8px -14px -16px;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 44% 10% at 4% 2%, #fff4ffad 0%, transparent 100%),
+      radial-gradient(ellipse 40% 9% at 96% 7%, #fff2ffad 0%, transparent 100%);
+  }
+  .home-cloud {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    filter: blur(3px);
+    opacity: .86;
+    pointer-events: none;
+    mix-blend-mode: normal;
+  }
+  .home-cloud-top-left {
+    top: -2%;
+    left: -18%;
+    width: 56%;
+    height: 18%;
+    background:
+      radial-gradient(ellipse 24% 44% at 18% 68%, #f8eaff 0 72%, transparent 100%),
+      radial-gradient(ellipse 30% 56% at 42% 48%, #f4e2ff 0 70%, transparent 100%),
+      radial-gradient(ellipse 28% 48% at 66% 65%, #f8ebff 0 70%, transparent 100%),
+      radial-gradient(ellipse 22% 38% at 84% 72%, #e8d3fb 0 70%, transparent 100%);
+  }
+  .home-cloud-top-right {
+    top: 0;
+    right: -20%;
+    width: 58%;
+    height: 19%;
+    background:
+      radial-gradient(ellipse 25% 44% at 17% 70%, #f8eaff 0 72%, transparent 100%),
+      radial-gradient(ellipse 31% 55% at 46% 48%, #f5e2ff 0 70%, transparent 100%),
+      radial-gradient(ellipse 28% 52% at 72% 68%, #fff0ff 0 70%, transparent 100%);
+  }
+  .home-cloud-left {
+    top: 23%;
+    left: -36%;
+    width: 62%;
+    height: 22%;
+    filter: blur(5px);
+    background:
+      radial-gradient(ellipse 28% 50% at 20% 70%, #c8a7ed 0 65%, transparent 100%),
+      radial-gradient(ellipse 32% 62% at 45% 48%, #d7baf2 0 69%, transparent 100%),
+      radial-gradient(ellipse 27% 47% at 72% 68%, #e4caf8 0 68%, transparent 100%);
+  }
+  .home-cloud-right {
+    top: 27%;
+    right: -37%;
+    width: 64%;
+    height: 22%;
+    filter: blur(5px);
+    background:
+      radial-gradient(ellipse 28% 48% at 25% 68%, #e7c9f6 0 68%, transparent 100%),
+      radial-gradient(ellipse 34% 59% at 54% 44%, #d4b4ef 0 70%, transparent 100%),
+      radial-gradient(ellipse 27% 48% at 80% 68%, #c8a6eb 0 68%, transparent 100%);
+  }
+  .home-cloud-bottom-left {
+    left: -22%;
+    bottom: -6%;
+    width: 66%;
+    height: 20%;
+    filter: blur(4px);
+    background:
+      radial-gradient(ellipse 25% 45% at 18% 65%, #c6a2ec 0 69%, transparent 100%),
+      radial-gradient(ellipse 34% 60% at 46% 43%, #d7b8f1 0 70%, transparent 100%),
+      radial-gradient(ellipse 28% 48% at 76% 64%, #e7cff8 0 70%, transparent 100%);
+  }
+  .home-cloud-bottom-center {
+    left: 18%;
+    bottom: -12%;
+    width: 70%;
+    height: 23%;
+    filter: blur(5px);
+    background:
+      radial-gradient(ellipse 29% 50% at 18% 66%, #f8e9fb 0 68%, transparent 100%),
+      radial-gradient(ellipse 38% 68% at 48% 40%, #fff1ff 0 71%, transparent 100%),
+      radial-gradient(ellipse 30% 51% at 81% 66%, #f5e2fa 0 69%, transparent 100%);
+  }
+  .home-cloud-bottom-right {
+    right: -23%;
+    bottom: -5%;
+    width: 64%;
+    height: 20%;
+    filter: blur(4px);
+    background:
+      radial-gradient(ellipse 27% 47% at 19% 64%, #e6cff8 0 68%, transparent 100%),
+      radial-gradient(ellipse 34% 60% at 53% 44%, #c9a6ec 0 70%, transparent 100%),
+      radial-gradient(ellipse 26% 46% at 80% 66%, #d8b8f0 0 68%, transparent 100%);
+  }
+
+  .site-shell.screen-home .home-topbar {
+    grid-row: 1;
+    min-height: 38px;
+    height: 38px;
+    align-self: start;
+  }
+
+  .site-shell.screen-home .home-brand-stage {
+    grid-row: 2;
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    align-self: stretch;
+    height: 100%;
+    min-height: 0;
+    padding-top: clamp(26px, 3.4svh, 42px);
+    overflow: visible;
+  }
+  .site-shell.screen-home .home-brand-logo {
+    width: clamp(142px, 44vw, 174px);
+    height: auto;
+    max-height: 20svh;
+  }
+
+  .site-shell.screen-home .home-action-stack {
+    grid-row: 3;
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    align-self: stretch;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    gap: clamp(6px, .9svh, 9px);
+  }
+  .site-shell.screen-home .home-action {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border-radius: 14px;
+  }
+  .site-shell.screen-home .home-action strong {
+    font-size: clamp(13px, 3.25vw, 15px);
+    letter-spacing: -.25px;
+  }
+  .site-shell.screen-home .home-action-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .site-shell.screen-home .home-feature-grid {
+    grid-row: 4;
+    align-self: stretch;
+    height: 100%;
+    min-height: 0;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 7px;
+  }
+  .site-shell.screen-home .home-feature-card {
+    height: 100%;
+    min-height: 0;
+    padding: 5px 2px 4px;
+    gap: 3px;
+    border-radius: 12px;
+  }
+  .site-shell.screen-home .home-feature-card > svg {
+    width: 27px;
+    height: 27px;
+  }
+  .site-shell.screen-home .home-feature-card strong {
+    font-size: clamp(9px, 2.5vw, 11px);
+    font-weight: 900;
+  }
+
+  .site-shell.screen-home .mobile-bottom-nav {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 7px);
+    min-height: 60px;
+    padding: 5px 7px;
+    border-radius: 15px;
+  }
+  .site-shell.screen-home .mobile-bottom-tab {
+    min-height: 47px;
+    gap: 0;
+    font-size: 9px;
+    font-weight: 850;
+  }
+  .site-shell.screen-home .mobile-bottom-icon {
+    width: 28px;
+    height: 27px;
+  }
+  .site-shell.screen-home .mobile-bottom-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+@media (max-height: 740px) and (max-width: 740px) {
+  .site-shell.screen-home .mobile-home-screen {
+    grid-template-rows: 34px minmax(150px, 23svh) minmax(190px, 33svh) minmax(68px, 13svh);
+    gap: 5px;
+  }
+  .site-shell.screen-home .home-topbar { height: 34px; min-height: 34px; }
+  .site-shell.screen-home .home-brand-stage { padding-top: 20px; }
+  .site-shell.screen-home .home-brand-logo { width: clamp(122px, 41vw, 150px); max-height: 19svh; }
+  .site-shell.screen-home .home-action { border-radius: 12px; }
+  .site-shell.screen-home .home-feature-card > svg { width: 22px; height: 22px; }
+}
